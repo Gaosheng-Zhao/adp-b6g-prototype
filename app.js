@@ -132,22 +132,25 @@
 
   function renderBoundary(frame) {
     clear(els.boundary);
-    if (!frame.candidate.length) return;
     const agents = agentMap(frame);
-    const points = frame.candidate.map(id => agents[id]);
-    const minX = Math.min(...points.map(point => point.x)) - 48;
-    const maxX = Math.max(...points.map(point => point.x)) + 48;
-    const minY = Math.min(...points.map(point => point.y)) - 48;
-    const maxY = Math.max(...points.map(point => point.y)) + 48;
-    const polygon = svgElement("rect", {
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY,
-      rx: 70,
-      class: `population-boundary${frame.active ? " active" : ""}`
-    });
-    els.boundary.appendChild(polygon);
+    const drawBoundary = (memberIds, className) => {
+      const points = memberIds.map(id => agents[id]).filter(Boolean);
+      if (!points.length) return;
+      const minX = Math.min(...points.map(point => point.x)) - 48;
+      const maxX = Math.max(...points.map(point => point.x)) + 48;
+      const minY = Math.min(...points.map(point => point.y)) - 48;
+      const maxY = Math.max(...points.map(point => point.y)) + 48;
+      els.boundary.appendChild(svgElement("rect", {
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY,
+        rx: 70,
+        class: `population-boundary ${className}`.trim()
+      }));
+    };
+    drawBoundary(frame.candidate, frame.active ? "active" : "");
+    drawBoundary(frame.discoveredCandidate || [], "discovered");
   }
 
   function renderAgents(frame) {
@@ -169,9 +172,9 @@
       group.appendChild(kind);
       if (isNew) {
         const badgeText = frame.step === 10
-          ? "NEW"
-          : frame.step === 11 ? "DISCOVERED"
-            : frame.step === 12 ? "ELIGIBLE"
+          ? "EXTERNAL"
+          : frame.step === 11 ? "CANDIDATE"
+            : frame.step === 12 ? "ADMISSION"
               : frame.step === 13 ? "ADMITTED"
                 : frame.step === 14 ? "ALIGNING" : "MEMBER";
         const badgeWidth = badgeText.length * 6.2 + 14;
@@ -235,9 +238,9 @@
   }
 
   function currentPopulationStatus(frame) {
-    if (frame.step === 10) return "Active ADP · EHC updating";
-    if (frame.step === 11) return "Active ADP · new member found";
-    if (frame.step === 12) return "Active ADP · admission screening";
+    if (frame.step === 10) return "Active ADP · cross-boundary demand";
+    if (frame.step === 11) return "Active ADP + New Candidate ADP";
+    if (frame.step === 12) return "Active ADP + Admission Candidate";
     if (frame.step === 13 || frame.step === 14) return "Expanded Candidate ADP";
     if (frame.step === 15) return "Expanded Active ADP";
     if (frame.active) return "Active ADP";
@@ -277,28 +280,26 @@
     if (!frame.operations.length) {
       els.operationTitle.textContent = frame.step < 10
         ? "No membership change is currently required"
-        : "New-member evidence is being accumulated";
+        : "Cross-boundary coordination demand is accumulating";
       els.operationDescription.textContent = frame.step < 10
         ? "Admission evaluation begins when an EHC update reveals a relationship-supported agent around the active ADP."
-        : "The BS is updating the EHC and running ADP discovery before deciding whether the newly visible agent is eligible to join.";
-      els.operationGrid.innerHTML = '<div class="operation-empty">Admission alternatives appear after communication feasibility, relationship support, and expected organizational gain have been evaluated.</div>';
+        : "Algorithm 1 has not yet completed discovery of the cross-boundary Candidate ADP.";
+      els.operationGrid.innerHTML = '<div class="operation-empty">The admission set construction appears after a newly discovered Candidate ADP overlaps the active population.</div>';
       return;
     }
 
-    els.operationTitle.textContent = frame.step >= 13
-      ? "New-member admission selected: A6 joins the ADP"
-      : "Three admission alternatives are screened";
-    els.operationDescription.textContent = "Candidate members are screened by communication feasibility, relationship support, and expected organizational gain before the expanded population is tested for reasoning coherence.";
+    els.operationTitle.textContent = "Admission is formed from Candidate ADP overlap";
+    els.operationDescription.textContent = "U2 overlaps the single active P1 through A3 and introduces A6, so the edge unit forms Ũ1 = P1 ∪ U2 and sends the union to Algorithm 2.";
     els.operationGrid.innerHTML = frame.operations.map(operation => `
       <article class="operation-card ${operation.status}">
         <span class="operation-status">${operation.status}</span>
         <h3>${operation.name}</h3>
         <div class="operation-members">Members: ${operation.members}</div>
-        <div class="operation-metrics">
+        ${operation.task ? `<div class="operation-metrics">
           <div><span>Task</span><strong>${operation.task}</strong></div>
           <div><span>Φ</span><strong>${operation.coherence.toFixed(2)}</strong></div>
           <div><span>C</span><strong>${operation.conflicts}</strong></div>
-        </div>
+        </div>` : ""}
         <p class="operation-reason">${operation.reason}</p>
       </article>`).join("");
   }
