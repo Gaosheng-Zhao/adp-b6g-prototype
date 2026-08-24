@@ -147,9 +147,9 @@ def make_frame(
     active: bool = False,
     operations: list[dict] | None = None,
 ) -> dict:
-    # A6 is discovered only when slow-timescale evolution searches beyond the
-    # degraded ADP. Before that point it is not part of the BS-visible EHC view.
-    visible_agents = AGENTS if step >= 12 else [agent for agent in AGENTS if agent.id != "A6"]
+    # A6 enters the BS-visible EHC only when the next slow-timescale update
+    # discovers a new organizational opportunity around the active ADP.
+    visible_agents = AGENTS if step >= 10 else [agent for agent in AGENTS if agent.id != "A6"]
     return {
         "step": step,
         "stage": stage,
@@ -170,7 +170,7 @@ def make_frame(
         "fastSlot": fast_slot,
         "reasoningRound": reasoning_round,
         "operations": operations or [],
-        "newMembers": ["A6"] if 12 <= step <= 15 else [],
+        "newMembers": ["A6"] if 10 <= step <= 15 else [],
     }
 
 
@@ -180,25 +180,16 @@ def build_trace() -> list[dict]:
     resolved_one = [dict(item) for item in base_items]
     resolved_one[0] = {**resolved_one[0], "state": "resolved"}
     resolved_all = [{**item, "state": "resolved"} for item in base_items]
-    degraded_items = [{**item} for item in resolved_all]
-    degraded_items[1] = {
-        **degraded_items[1],
-        "state": "unresolved",
-        "condition": {
-            **degraded_items[1]["condition"],
-            "communication": 0.28,
-        },
-    }
     expanded_candidate = ["A1", "A2", "A3", "A4", "A6"]
     admission_item = {
         "id": "RI-3",
-        "agents": ["A3", "A4", "A6"],
+        "agents": ["A3", "A6"],
         "condition": {
             "spatial": 0.72,
             "temporal": 0.78,
             "communication": 0.89,
         },
-        "constraint": "Use the admitted member to eliminate the residual A3-A4 action conflict",
+        "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
         "state": "unresolved",
     }
     admission_items = [resolved_all[0], admission_item]
@@ -207,31 +198,31 @@ def build_trace() -> list[dict]:
     ]
     operation_candidates = [
         {
-            "name": "Retain and retry",
+            "name": "Keep the current ADP",
             "members": "A1, A2, A3, A4",
-            "task": "maintained",
-            "coherence": 0.50,
-            "conflicts": 1,
+            "task": "baseline",
+            "coherence": 1.00,
+            "conflicts": 0,
             "status": "rejected",
-            "reason": "Repeated RI-2 failure remains",
+            "reason": "Stable operation continues but the newly discovered organizational gain is unused",
         },
         {
             "name": "Admit A5",
             "members": "A1, A2, A3, A4, A5",
-            "task": "maintained",
-            "coherence": 0.50,
-            "conflicts": 1,
+            "task": "unchanged",
+            "coherence": 0.67,
+            "conflicts": 0,
             "status": "rejected",
-            "reason": "A5 is not dependency-relevant to unresolved RI-2",
+            "reason": "A5 lacks sufficient relationship support for population expansion",
         },
         {
             "name": "Admit A6",
             "members": "A1, A2, A3, A4, A6",
-            "task": "maintained",
+            "task": "expanded",
             "coherence": 1.00,
             "conflicts": 0,
             "status": "selected",
-            "reason": "A6 is communication-feasible and dependency-relevant to RI-2",
+            "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial",
         },
     ]
 
@@ -332,33 +323,29 @@ def build_trace() -> list[dict]:
         ),
         make_frame(
             10,
-            "Repeated degradation",
-            "One member repeatedly prevents full alignment",
-            "Across subsequent slots, A4 repeatedly appears in unresolved RI-2 outcomes; coherence falls and one action conflict remains after the fast alignment budget expires.",
-            candidate, degraded_items, "ehc", [["A3", "A4"]], 0.5, 1,
-            [
-                {"slot": "RB-1", "item": "RI-1", "agent": "A1+A2", "state": "completed"},
-                {"slot": "RB-2", "item": "RI-2", "agent": "A3", "state": "completed"},
-                {"slot": "RB-3", "item": "RI-2", "agent": "A4", "state": "waiting"},
-            ], "fast", "k = 3 · 40–60 s", "t = 403 … 600", "terminal",
+            "EHC update",
+            "A new agent enters the relationship-aware view",
+            "While the four-member ADP remains coherent, the next slow-timescale EHC update makes the communication-feasible A6 and its relationship to A3 visible to the BS.",
+            candidate, resolved_all, "ehc", [], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "aggregated observations", "—",
             active=True,
         ),
         make_frame(
             11,
-            "Population monitoring",
-            "Fast failures accumulate into structural evidence",
-            "At the slow epoch boundary, the BS attributes the repeated unresolved-item pattern to the current membership rather than to a single transient slot.",
-            candidate, degraded_items, "ehc", [["A3", "A4"]], 0.5, 1, [],
-            "slow", "k = 4 · 60–80 s", "aggregate t = 403 … 600", "—",
+            "New-member discovery",
+            "ADP discovery identifies A6 as an expansion candidate",
+            "Expansion from the active ADP along the updated EHC relation structure identifies A6 as a communication-feasible, relationship-supported candidate member.",
+            candidate, resolved_all, "dependencies", [], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "discovery", "—",
             active=True,
         ),
         make_frame(
             12,
-            "Member admission screening",
-            "The BS searches for a conflict-relevant new member",
-            "The EHC exposes newly visible agents, and the BS screens their communication feasibility and relevance to the unresolved RI-2 before expanding the ADP.",
-            candidate, degraded_items, "ehc", [["A3", "A4"]], 0.5, 1, [],
-            "slow", "k = 4 · 60–80 s", "operation screening", "—",
+            "Admission evaluation",
+            "The BS evaluates whether A6 should join",
+            "The BS compares the organizational gain of admitting relationship-supported A6 against its maintenance and alignment costs while the existing ADP continues normal operation.",
+            candidate, resolved_all, "ehc", [], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "admission screening", "—",
             active=True,
             operations=operation_candidates,
         ),
@@ -366,8 +353,8 @@ def build_trace() -> list[dict]:
             13,
             "Population expansion",
             "A6 joins an expanded Candidate ADP",
-            "The communication-feasible and dependency-relevant A6 is admitted without removing any current member. The expanded population remains a Candidate ADP until fast-timescale validation succeeds.",
-            expanded_candidate, [admission_item], "ehc", [["A3", "A4"]], 0.0, 1, [],
+            "A6 passes admission evaluation and is added without removing any current member. The five-member population remains a Candidate ADP until new-member alignment succeeds.",
+            expanded_candidate, admission_items, "ehc", [], 0.67, 0, [],
             "slow", "k = 5 · 80–100 s", "epoch boundary", "—",
             operations=operation_candidates,
         ),
@@ -375,25 +362,23 @@ def build_trace() -> list[dict]:
             14,
             "Expanded-ADP alignment",
             "The five-member population re-enters Algorithm 2",
-            "The BS schedules A3, A4, and the admitted A6 for RI-3 and checks whether the expanded population can restore coherence without residual conflict.",
-            expanded_candidate, admission_items, "ehc", [["A3", "A4"]], 0.5, 1,
+            "The BS schedules A3 and the admitted A6 for RI-3 to align the new member with the active population's task-relevant decision basis.",
+            expanded_candidate, admission_items, "ehc", [], 0.67, 0,
             [
                 {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "scheduled"},
-                {"slot": "RB-2", "item": "RI-3", "agent": "A4", "state": "scheduled"},
-                {"slot": "RB-3", "item": "RI-3", "agent": "A6", "state": "scheduled"},
+                {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "scheduled"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 0",
             operations=operation_candidates,
         ),
         make_frame(
             15,
             "Expanded Active ADP",
-            "New-member admission restores coherent operation",
-            "The expanded membership passes alignment validation: population coherence returns to one and the residual A3-A4 action conflict is eliminated without removing either member.",
+            "New-member admission is confirmed",
+            "A6 passes alignment validation, so the five-member population becomes active with full reasoning coherence and no prospective action conflict.",
             expanded_candidate, admission_resolved, "ehc", [], 1.0, 0,
             [
                 {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "completed"},
-                {"slot": "RB-2", "item": "RI-3", "agent": "A4", "state": "completed"},
-                {"slot": "RB-3", "item": "RI-3", "agent": "A6", "state": "completed"},
+                {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "completed"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 1",
             active=True,
             operations=operation_candidates,
