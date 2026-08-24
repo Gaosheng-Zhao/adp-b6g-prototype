@@ -2,9 +2,9 @@
 
 The code intentionally mirrors the paper's current definitions. It does not
 model D2D/BS relay selection. The BS observes three dependency dimensions,
-discovers a Candidate ADP from recurring pre-action conflicts, instantiates one
-reasoning item per current conflicting pair, and schedules limited radio
-resources to support incremental item resolution.
+discovers a Candidate ADP from recurring pre-action conflicts, instantiates
+population reasoning items with multi-member affected scopes, and schedules
+limited radio resources to support incremental item resolution.
 """
 
 from __future__ import annotations
@@ -34,10 +34,6 @@ class Relation:
     temporal: float
     communication: float
 
-    @property
-    def mean_strength(self) -> float:
-        return (self.spatial + self.temporal + self.communication) / 3.0
-
 
 AGENTS = [
     Agent("A1", "Shuttle", 145, 270, "serve west platform"),
@@ -65,9 +61,9 @@ RELATIONS = [
 # listed last; both have repeatedly required coordination in the slow epoch.
 CONFLICT_HISTORY = [
     [("A1", "A2")],
-    [("A3", "A4")],
-    [("A1", "A2"), ("A3", "A4")],
-    [("A1", "A2"), ("A3", "A4")],
+    [("A1", "A2"), ("A2", "A3")],
+    [("A1", "A2"), ("A2", "A3"), ("A3", "A4")],
+    [("A1", "A2"), ("A2", "A3"), ("A3", "A4")],
 ]
 
 # A later epoch contains recurring coordination demand between an existing
@@ -90,45 +86,75 @@ def conflict_counts(history: list[list[tuple[str, str]]]) -> dict[tuple[str, str
 
 
 def discover_candidate(history: list[list[tuple[str, str]]]) -> list[str]:
-    """Discover a compact candidate from recurring conflict endpoints.
+    """Executable counterpart of Algorithm 1 in the paper."""
 
-    This is a deliberately small executable counterpart of Algorithm 1: use
-    recurring conflicts as seeds and retain their EHC-connected endpoints.
-    """
+    counts = conflict_counts(history)
+    relation_pairs = {
+        tuple(sorted((relation.source, relation.target))) for relation in RELATIONS
+    }
+    eligible = {pair: count for pair, count in counts.items() if pair in relation_pairs}
+    if not eligible:
+        return []
 
-    recurring_pairs = {pair for pair, count in conflict_counts(history).items() if count >= 2}
-    candidate = {agent for pair in recurring_pairs for agent in pair}
+    seed = max(eligible, key=eligible.get)
+    candidate = set(seed)
+    all_agents = {agent.id for agent in AGENTS}
 
-    # Keep only endpoints supported by at least one sufficiently strong EHC edge.
-    supported = set()
-    for relation in RELATIONS:
-        pair = tuple(sorted((relation.source, relation.target)))
-        if pair in recurring_pairs and relation.mean_strength >= 0.70:
-            supported.update(pair)
-    return sorted(candidate & supported)
+    while True:
+        scores: dict[str, int] = {}
+        for external in all_agents - candidate:
+            score = 0
+            for member in candidate:
+                pair = tuple(sorted((member, external)))
+                if pair in relation_pairs:
+                    score += counts.get(pair, 0)
+            if score > 0:
+                scores[external] = score
+        if not scores:
+            break
+        candidate.add(max(scores, key=scores.get))
+
+    return sorted(candidate)
 
 
 def generate_items(candidate: list[str]) -> list[dict]:
-    current_conflicts = CONFLICT_HISTORY[-1]
+    """Instantiate population-scoped items for the deterministic case study."""
+
+    specifications = [
+        (
+            "RI-1",
+            ["A1", "A2", "A3"],
+            [("A1", "A2"), ("A2", "A3")],
+            "Establish a compatible traversal order across the shared intersection",
+        ),
+        (
+            "RI-2",
+            ["A2", "A3", "A4"],
+            [("A2", "A3"), ("A3", "A4")],
+            "Coordinate the intersecting service and mobility actions",
+        ),
+    ]
     items = []
-    for index, (source, target) in enumerate(current_conflicts, start=1):
-        if source not in candidate or target not in candidate:
+    for item_id, affected_scope, supporting_pairs, constraint in specifications:
+        if not set(affected_scope).issubset(candidate):
             continue
-        relation = next(
-            rel
-            for rel in RELATIONS
-            if {rel.source, rel.target} == {source, target}
-        )
+        supporting_relations = [
+            relation
+            for relation in RELATIONS
+            if tuple(sorted((relation.source, relation.target)))
+            in {tuple(sorted(pair)) for pair in supporting_pairs}
+        ]
+        count = len(supporting_relations)
         items.append(
             {
-                "id": f"RI-{index}",
-                "agents": [source, target],
+                "id": item_id,
+                "agents": affected_scope,
                 "condition": {
-                    "spatial": relation.spatial,
-                    "temporal": relation.temporal,
-                    "communication": relation.communication,
+                    "spatial": sum(rel.spatial for rel in supporting_relations) / count,
+                    "temporal": sum(rel.temporal for rel in supporting_relations) / count,
+                    "communication": sum(rel.communication for rel in supporting_relations) / count,
                 },
-                "constraint": "Eliminate the corresponding pre-action conflict",
+                "constraint": constraint,
                 "state": "unresolved",
             }
         )
@@ -193,10 +219,10 @@ def build_trace() -> list[dict]:
     expanded_candidate = ["A1", "A2", "A3", "A4", "A6"]
     admission_item = {
         "id": "RI-3",
-        "agents": ["A3", "A6"],
+        "agents": ["A2", "A3", "A4", "A6"],
         "condition": {
-            "spatial": 0.72,
-            "temporal": 0.78,
+            "spatial": 0.78,
+            "temporal": 0.84,
             "communication": 0.89,
         },
         "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
@@ -253,34 +279,34 @@ def build_trace() -> list[dict]:
             3,
             "Coordination demand",
             "Recurring pre-action conflicts emerge",
-            "Repeated observations over the epoch show that two EHC-connected pairs regularly propose actions that cannot be jointly executed.",
-            [], [], "ehc", [["A1", "A2"], ["A3", "A4"]], 0.0, 2, [], "slow", "k = 2 · 20–40 s", "t = 201 … 400", "—",
+            "Repeated observations over the epoch reveal a connected pattern of pre-actions that cannot be jointly executed across the intersection.",
+            [], [], "ehc", [["A1", "A2"], ["A2", "A3"], ["A3", "A4"]], 0.0, 3, [], "slow", "k = 2 · 20–40 s", "t = 201 … 400", "—",
         ),
         make_frame(
             4,
             "Candidate ADP",
             "A candidate population is discovered",
-            "After slow-timescale accumulation, recurring conflicts seed Algorithm 1 and their dependency-supported endpoints form a Candidate ADP.",
-            candidate, [], "ehc", [["A1", "A2"], ["A3", "A4"]], 0.0, 2, [], "slow", "k = 3 · 40–60 s", "epoch boundary", "—",
+            "Algorithm 1 selects the strongest recurring-conflict seed and expands through EHC-connected agents with accumulated coordination demand.",
+            candidate, [], "ehc", [["A1", "A2"], ["A2", "A3"], ["A3", "A4"]], 0.0, 3, [], "slow", "k = 3 · 40–60 s", "epoch boundary", "—",
         ),
         make_frame(
             5,
             "Reasoning items",
-            "Conflicts instantiate population reasoning items",
-            "Within one fast decision slot, each current conflict pair contributes one unresolved item grounded in its three dependency dimensions.",
-            candidate, base_items, "ehc", [["A1", "A2"], ["A3", "A4"]], 0.0, 2, [], "fast", "k = 3 · 40–60 s", "t = 401 · <100 ms", "r = 0",
+            "Cross-agent constraints instantiate population reasoning items",
+            "Each item carries a task-relevant condition, decision constraint, and affected scope that may span multiple Candidate ADP members.",
+            candidate, base_items, "ehc", [["A1", "A2"], ["A2", "A3"], ["A3", "A4"]], 0.0, 3, [], "fast", "k = 3 · 40–60 s", "t = 401 · <100 ms", "r = 0",
         ),
         make_frame(
             6,
             "Resource scheduling",
             "The BS schedules item-relevant exchanges",
             "Limited radio resources are assigned to RI-1 first; unscheduled items remain unresolved.",
-            candidate, base_items, "ehc", [["A1", "A2"], ["A3", "A4"]], 0.0, 2,
+            candidate, base_items, "ehc", [["A1", "A2"], ["A2", "A3"], ["A3", "A4"]], 0.0, 3,
             [
                 {"slot": "RB-1", "item": "RI-1", "agent": "A1", "state": "scheduled"},
                 {"slot": "RB-2", "item": "RI-1", "agent": "A2", "state": "scheduled"},
-                {"slot": "RB-3", "item": "RI-2", "agent": "A3", "state": "waiting"},
-                {"slot": "RB-4", "item": "RI-2", "agent": "A4", "state": "waiting"},
+                {"slot": "RB-3", "item": "RI-1", "agent": "A3", "state": "scheduled"},
+                {"slot": "RB-4", "item": "RI-2", "agent": "A2+A3+A4", "state": "waiting"},
             ], "fast", "k = 3 · 40–60 s", "t = 401 · <100 ms", "r = 0",
         ),
         make_frame(
@@ -290,8 +316,8 @@ def build_trace() -> list[dict]:
             "The scheduled responses resolve RI-1. Population coherence rises while one action conflict remains.",
             candidate, resolved_one, "ehc", [["A3", "A4"]], 0.5, 1,
             [
-                {"slot": "RB-1", "item": "RI-1", "agent": "A1", "state": "completed"},
-                {"slot": "RB-2", "item": "RI-1", "agent": "A2", "state": "completed"},
+                {"slot": "RB-1", "item": "RI-1", "agent": "A1+A2+A3", "state": "completed"},
+                {"slot": "RB-2", "item": "RI-2", "agent": "A2", "state": "scheduled"},
                 {"slot": "RB-3", "item": "RI-2", "agent": "A3", "state": "scheduled"},
                 {"slot": "RB-4", "item": "RI-2", "agent": "A4", "state": "scheduled"},
             ], "fast", "k = 3 · 40–60 s", "t = 401 · <100 ms", "r = 1",
@@ -303,10 +329,8 @@ def build_trace() -> list[dict]:
             "Both items are resolved: population coherence reaches one and no action conflict remains.",
             candidate, resolved_all, "ehc", [], 1.0, 0,
             [
-                {"slot": "RB-1", "item": "RI-1", "agent": "A1", "state": "completed"},
-                {"slot": "RB-2", "item": "RI-1", "agent": "A2", "state": "completed"},
-                {"slot": "RB-3", "item": "RI-2", "agent": "A3", "state": "completed"},
-                {"slot": "RB-4", "item": "RI-2", "agent": "A4", "state": "completed"},
+                {"slot": "RB-1", "item": "RI-1", "agent": "A1+A2+A3", "state": "completed"},
+                {"slot": "RB-2", "item": "RI-2", "agent": "A2+A3+A4", "state": "completed"},
             ], "fast", "k = 3 · 40–60 s", "t = 401 · <100 ms", "r = 2",
             active=True,
         ),
@@ -317,8 +341,7 @@ def build_trace() -> list[dict]:
             "In the next fast slot, the Active ADP reuses its valid population reasoning state and avoids repeating the initial alignment overhead.",
             candidate, resolved_all, "ehc", [], 1.0, 0,
             [
-                {"slot": "RB-1", "item": "reused", "agent": "A1+A2", "state": "completed"},
-                {"slot": "RB-2", "item": "reused", "agent": "A3+A4", "state": "completed"},
+                {"slot": "RB-1", "item": "z1* reused", "agent": "A1+A2+A3+A4", "state": "completed"},
             ], "fast", "k = 3 · 40–60 s", "t = 402 · <100 ms", "reuse",
             active=True,
         ),
@@ -365,11 +388,13 @@ def build_trace() -> list[dict]:
             14,
             "Expansion validation",
             "Algorithm 2 aligns the expanded Candidate ADP",
-            "The BS schedules A3 and A6 for RI-3 and tests whether Ũ1 can reach full reasoning coherence with no residual action conflict.",
+            "The BS schedules the multi-member affected scope of RI-3 and tests whether Ũ1 can reach full reasoning coherence with no residual action conflict.",
             expanded_candidate, admission_items, "ehc", [["A3", "A6"]], 0.67, 1,
             [
-                {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "scheduled"},
-                {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "scheduled"},
+                {"slot": "RB-1", "item": "RI-3", "agent": "A2", "state": "scheduled"},
+                {"slot": "RB-2", "item": "RI-3", "agent": "A3", "state": "scheduled"},
+                {"slot": "RB-3", "item": "RI-3", "agent": "A4", "state": "scheduled"},
+                {"slot": "RB-4", "item": "RI-3", "agent": "A6", "state": "scheduled"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 0",
             operations=admission_sets,
         ),
@@ -380,8 +405,8 @@ def build_trace() -> list[dict]:
             "Algorithm 2 reaches Φ=1 and C=0, so Ũ1 is activated as the new P1; otherwise, the original four-member P1 would have been retained.",
             expanded_candidate, admission_resolved, "ehc", [], 1.0, 0,
             [
-                {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "completed"},
-                {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "completed"},
+                {"slot": "RB-1", "item": "RI-3", "agent": "A2+A3", "state": "completed"},
+                {"slot": "RB-2", "item": "RI-3", "agent": "A4+A6", "state": "completed"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 1",
             active=True,
             operations=admission_sets,
