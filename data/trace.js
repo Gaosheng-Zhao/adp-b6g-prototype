@@ -112,6 +112,7 @@ window.ADP_TRACE = [
     "fastSlot": "sampling",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -227,6 +228,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 1 \u2026 200",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -342,6 +344,7 @@ window.ADP_TRACE = [
     "fastSlot": "aggregated slots",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -466,6 +469,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 201 \u2026 400",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -595,6 +599,7 @@ window.ADP_TRACE = [
     "fastSlot": "epoch boundary",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -753,6 +758,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 0",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -936,6 +942,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 0",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -1115,6 +1122,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 1",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -1289,6 +1297,7 @@ window.ADP_TRACE = [
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 2",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
@@ -1451,13 +1460,14 @@ window.ADP_TRACE = [
     "fastSlot": "t = 402 \u00b7 <100 ms",
     "reasoningRound": "reuse",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": []
   },
   {
     "step": 10,
-    "stage": "EHC update",
-    "title": "A new agent enters the relationship-aware view",
-    "description": "While the four-member ADP remains coherent, the next slow-timescale EHC update makes the communication-feasible A6 and its relationship to A3 visible to the BS.",
+    "stage": "Cross-boundary demand",
+    "title": "New coordination demand crosses the active ADP boundary",
+    "description": "The active P1 remains internally coherent, while recurring A3-A6 pre-action conflicts accumulate across the boundary together with their persistent EHC relation.",
     "agents": [
       {
         "id": "A1",
@@ -1561,7 +1571,12 @@ window.ADP_TRACE = [
       }
     ],
     "visibleRelations": "ehc",
-    "conflicts": [],
+    "conflicts": [
+      [
+        "A3",
+        "A6"
+      ]
+    ],
     "candidate": [
       "A1",
       "A2",
@@ -1604,176 +1619,19 @@ window.ADP_TRACE = [
     "resources": [],
     "timescale": "slow",
     "slowEpoch": "k = 4 \u00b7 60\u201380 s",
-    "fastSlot": "aggregated observations",
+    "fastSlot": "accumulated slots",
     "reasoningRound": "\u2014",
     "operations": [],
+    "discoveredCandidate": [],
     "newMembers": [
       "A6"
     ]
   },
   {
     "step": 11,
-    "stage": "New-member discovery",
-    "title": "ADP discovery identifies A6 as an expansion candidate",
-    "description": "Expansion from the active ADP along the updated EHC relation structure identifies A6 as a communication-feasible, relationship-supported candidate member.",
-    "agents": [
-      {
-        "id": "A1",
-        "kind": "Shuttle",
-        "x": 145,
-        "y": 270,
-        "intent": "serve west platform"
-      },
-      {
-        "id": "A2",
-        "kind": "Robot",
-        "x": 350,
-        "y": 445,
-        "intent": "cross service lane"
-      },
-      {
-        "id": "A3",
-        "kind": "Shuttle",
-        "x": 565,
-        "y": 270,
-        "intent": "serve east platform"
-      },
-      {
-        "id": "A4",
-        "kind": "Robot",
-        "x": 350,
-        "y": 95,
-        "intent": "cross service lane"
-      },
-      {
-        "id": "A5",
-        "kind": "UAV",
-        "x": 105,
-        "y": 105,
-        "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
-      }
-    ],
-    "relations": [
-      {
-        "source": "A1",
-        "target": "A2",
-        "spatial": 0.86,
-        "temporal": 0.92,
-        "communication": 0.88
-      },
-      {
-        "source": "A2",
-        "target": "A3",
-        "spatial": 0.79,
-        "temporal": 0.85,
-        "communication": 0.91
-      },
-      {
-        "source": "A3",
-        "target": "A4",
-        "spatial": 0.83,
-        "temporal": 0.9,
-        "communication": 0.86
-      },
-      {
-        "source": "A4",
-        "target": "A1",
-        "spatial": 0.76,
-        "temporal": 0.81,
-        "communication": 0.84
-      },
-      {
-        "source": "A1",
-        "target": "A3",
-        "spatial": 0.48,
-        "temporal": 0.72,
-        "communication": 0.78
-      },
-      {
-        "source": "A2",
-        "target": "A4",
-        "spatial": 0.45,
-        "temporal": 0.68,
-        "communication": 0.8
-      },
-      {
-        "source": "A1",
-        "target": "A5",
-        "spatial": 0.22,
-        "temporal": 0.31,
-        "communication": 0.74
-      },
-      {
-        "source": "A3",
-        "target": "A6",
-        "spatial": 0.72,
-        "temporal": 0.78,
-        "communication": 0.89
-      }
-    ],
-    "visibleRelations": "dependencies",
-    "conflicts": [],
-    "candidate": [
-      "A1",
-      "A2",
-      "A3",
-      "A4"
-    ],
-    "active": true,
-    "items": [
-      {
-        "id": "RI-1",
-        "agents": [
-          "A1",
-          "A2"
-        ],
-        "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
-        },
-        "constraint": "Eliminate the corresponding pre-action conflict",
-        "state": "resolved"
-      },
-      {
-        "id": "RI-2",
-        "agents": [
-          "A3",
-          "A4"
-        ],
-        "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
-        },
-        "constraint": "Eliminate the corresponding pre-action conflict",
-        "state": "resolved"
-      }
-    ],
-    "coherence": 1.0,
-    "conflictCount": 0,
-    "resources": [],
-    "timescale": "slow",
-    "slowEpoch": "k = 4 \u00b7 60\u201380 s",
-    "fastSlot": "discovery",
-    "reasoningRound": "\u2014",
-    "operations": [],
-    "newMembers": [
-      "A6"
-    ]
-  },
-  {
-    "step": 12,
-    "stage": "Admission evaluation",
-    "title": "The BS evaluates whether A6 should join",
-    "description": "The BS compares the organizational gain of admitting relationship-supported A6 against its maintenance and alignment costs while the existing ADP continues normal operation.",
+    "stage": "Candidate ADP discovery",
+    "title": "Algorithm 1 discovers an overlapping Candidate ADP",
+    "description": "From the recurring A3-A6 coordination demand, Algorithm 1 discovers U2={A3,A6}, which overlaps active P1 at A3 and introduces external member A6.",
     "agents": [
       {
         "id": "A1",
@@ -1877,7 +1735,12 @@ window.ADP_TRACE = [
       }
     ],
     "visibleRelations": "ehc",
-    "conflicts": [],
+    "conflicts": [
+      [
+        "A3",
+        "A6"
+      ]
+    ],
     "candidate": [
       "A1",
       "A2",
@@ -1920,36 +1783,198 @@ window.ADP_TRACE = [
     "resources": [],
     "timescale": "slow",
     "slowEpoch": "k = 4 \u00b7 60\u201380 s",
-    "fastSlot": "admission screening",
+    "fastSlot": "Algorithm 1",
+    "reasoningRound": "\u2014",
+    "operations": [],
+    "discoveredCandidate": [
+      "A3",
+      "A6"
+    ],
+    "newMembers": [
+      "A6"
+    ]
+  },
+  {
+    "step": 12,
+    "stage": "Admission operation",
+    "title": "Candidate overlap forms an admission candidate",
+    "description": "Because U2 overlaps one active ADP and extends beyond its boundary, the edge unit forms U\u03031=P1\u222aU2 while retaining the original active P1 during validation.",
+    "agents": [
+      {
+        "id": "A1",
+        "kind": "Shuttle",
+        "x": 145,
+        "y": 270,
+        "intent": "serve west platform"
+      },
+      {
+        "id": "A2",
+        "kind": "Robot",
+        "x": 350,
+        "y": 445,
+        "intent": "cross service lane"
+      },
+      {
+        "id": "A3",
+        "kind": "Shuttle",
+        "x": 565,
+        "y": 270,
+        "intent": "serve east platform"
+      },
+      {
+        "id": "A4",
+        "kind": "Robot",
+        "x": 350,
+        "y": 95,
+        "intent": "cross service lane"
+      },
+      {
+        "id": "A5",
+        "kind": "UAV",
+        "x": 105,
+        "y": 105,
+        "intent": "observe mobility zone"
+      },
+      {
+        "id": "A6",
+        "kind": "Backup robot",
+        "x": 615,
+        "y": 425,
+        "intent": "stand by for service replacement"
+      }
+    ],
+    "relations": [
+      {
+        "source": "A1",
+        "target": "A2",
+        "spatial": 0.86,
+        "temporal": 0.92,
+        "communication": 0.88
+      },
+      {
+        "source": "A2",
+        "target": "A3",
+        "spatial": 0.79,
+        "temporal": 0.85,
+        "communication": 0.91
+      },
+      {
+        "source": "A3",
+        "target": "A4",
+        "spatial": 0.83,
+        "temporal": 0.9,
+        "communication": 0.86
+      },
+      {
+        "source": "A4",
+        "target": "A1",
+        "spatial": 0.76,
+        "temporal": 0.81,
+        "communication": 0.84
+      },
+      {
+        "source": "A1",
+        "target": "A3",
+        "spatial": 0.48,
+        "temporal": 0.72,
+        "communication": 0.78
+      },
+      {
+        "source": "A2",
+        "target": "A4",
+        "spatial": 0.45,
+        "temporal": 0.68,
+        "communication": 0.8
+      },
+      {
+        "source": "A1",
+        "target": "A5",
+        "spatial": 0.22,
+        "temporal": 0.31,
+        "communication": 0.74
+      },
+      {
+        "source": "A3",
+        "target": "A6",
+        "spatial": 0.72,
+        "temporal": 0.78,
+        "communication": 0.89
+      }
+    ],
+    "visibleRelations": "ehc",
+    "conflicts": [
+      [
+        "A3",
+        "A6"
+      ]
+    ],
+    "candidate": [
+      "A1",
+      "A2",
+      "A3",
+      "A4"
+    ],
+    "active": true,
+    "items": [
+      {
+        "id": "RI-1",
+        "agents": [
+          "A1",
+          "A2"
+        ],
+        "condition": {
+          "spatial": 0.86,
+          "temporal": 0.92,
+          "communication": 0.88
+        },
+        "constraint": "Eliminate the corresponding pre-action conflict",
+        "state": "resolved"
+      },
+      {
+        "id": "RI-2",
+        "agents": [
+          "A3",
+          "A4"
+        ],
+        "condition": {
+          "spatial": 0.83,
+          "temporal": 0.9,
+          "communication": 0.86
+        },
+        "constraint": "Eliminate the corresponding pre-action conflict",
+        "state": "resolved"
+      }
+    ],
+    "coherence": 1.0,
+    "conflictCount": 0,
+    "resources": [],
+    "timescale": "slow",
+    "slowEpoch": "k = 4 \u00b7 60\u201380 s",
+    "fastSlot": "set union",
     "reasoningRound": "\u2014",
     "operations": [
       {
-        "name": "Keep the current ADP",
+        "name": "Active ADP P1[k]",
         "members": "A1, A2, A3, A4",
-        "task": "baseline",
-        "coherence": 1.0,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "Stable operation continues but the newly discovered organizational gain is unused"
+        "status": "context",
+        "reason": "The original population remains active during admission validation"
       },
       {
-        "name": "Admit A5",
-        "members": "A1, A2, A3, A4, A5",
-        "task": "unchanged",
-        "coherence": 0.67,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "A5 lacks sufficient relationship support for population expansion"
+        "name": "New Candidate U2[k]",
+        "members": "A3, A6",
+        "status": "candidate",
+        "reason": "Algorithm 1 finds overlap {A3} and external member {A6}"
       },
       {
-        "name": "Admit A6",
+        "name": "Admission candidate U\u03031[k]",
         "members": "A1, A2, A3, A4, A6",
-        "task": "expanded",
-        "coherence": 1.0,
-        "conflicts": 0,
         "status": "selected",
-        "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial"
+        "reason": "U\u03031[k] = P1[k] \u222a U2[k]; activation still requires Algorithm 2"
       }
+    ],
+    "discoveredCandidate": [
+      "A3",
+      "A6"
     ],
     "newMembers": [
       "A6"
@@ -1957,9 +1982,9 @@ window.ADP_TRACE = [
   },
   {
     "step": 13,
-    "stage": "Population expansion",
-    "title": "A6 joins an expanded Candidate ADP",
-    "description": "A6 passes admission evaluation and is added without removing any current member. The five-member population remains a Candidate ADP until new-member alignment succeeds.",
+    "stage": "Expanded Candidate ADP",
+    "title": "The union enters fast-timescale validation",
+    "description": "U\u03031 contains P1 and the external member A6 but is not yet active; its unresolved cross-boundary reasoning item RI-3 must be aligned first.",
     "agents": [
       {
         "id": "A1",
@@ -2063,7 +2088,12 @@ window.ADP_TRACE = [
       }
     ],
     "visibleRelations": "ehc",
-    "conflicts": [],
+    "conflicts": [
+      [
+        "A3",
+        "A6"
+      ]
+    ],
     "candidate": [
       "A1",
       "A2",
@@ -2088,6 +2118,20 @@ window.ADP_TRACE = [
         "state": "resolved"
       },
       {
+        "id": "RI-2",
+        "agents": [
+          "A3",
+          "A4"
+        ],
+        "condition": {
+          "spatial": 0.83,
+          "temporal": 0.9,
+          "communication": 0.86
+        },
+        "constraint": "Eliminate the corresponding pre-action conflict",
+        "state": "resolved"
+      },
+      {
         "id": "RI-3",
         "agents": [
           "A3",
@@ -2103,7 +2147,7 @@ window.ADP_TRACE = [
       }
     ],
     "coherence": 0.67,
-    "conflictCount": 0,
+    "conflictCount": 1,
     "resources": [],
     "timescale": "slow",
     "slowEpoch": "k = 5 \u00b7 80\u2013100 s",
@@ -2111,42 +2155,34 @@ window.ADP_TRACE = [
     "reasoningRound": "\u2014",
     "operations": [
       {
-        "name": "Keep the current ADP",
+        "name": "Active ADP P1[k]",
         "members": "A1, A2, A3, A4",
-        "task": "baseline",
-        "coherence": 1.0,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "Stable operation continues but the newly discovered organizational gain is unused"
+        "status": "context",
+        "reason": "The original population remains active during admission validation"
       },
       {
-        "name": "Admit A5",
-        "members": "A1, A2, A3, A4, A5",
-        "task": "unchanged",
-        "coherence": 0.67,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "A5 lacks sufficient relationship support for population expansion"
+        "name": "New Candidate U2[k]",
+        "members": "A3, A6",
+        "status": "candidate",
+        "reason": "Algorithm 1 finds overlap {A3} and external member {A6}"
       },
       {
-        "name": "Admit A6",
+        "name": "Admission candidate U\u03031[k]",
         "members": "A1, A2, A3, A4, A6",
-        "task": "expanded",
-        "coherence": 1.0,
-        "conflicts": 0,
         "status": "selected",
-        "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial"
+        "reason": "U\u03031[k] = P1[k] \u222a U2[k]; activation still requires Algorithm 2"
       }
     ],
+    "discoveredCandidate": [],
     "newMembers": [
       "A6"
     ]
   },
   {
     "step": 14,
-    "stage": "Expanded-ADP alignment",
-    "title": "The five-member population re-enters Algorithm 2",
-    "description": "The BS schedules A3 and the admitted A6 for RI-3 to align the new member with the active population's task-relevant decision basis.",
+    "stage": "Expansion validation",
+    "title": "Algorithm 2 aligns the expanded Candidate ADP",
+    "description": "The BS schedules A3 and A6 for RI-3 and tests whether U\u03031 can reach full reasoning coherence with no residual action conflict.",
     "agents": [
       {
         "id": "A1",
@@ -2250,7 +2286,12 @@ window.ADP_TRACE = [
       }
     ],
     "visibleRelations": "ehc",
-    "conflicts": [],
+    "conflicts": [
+      [
+        "A3",
+        "A6"
+      ]
+    ],
     "candidate": [
       "A1",
       "A2",
@@ -2275,6 +2316,20 @@ window.ADP_TRACE = [
         "state": "resolved"
       },
       {
+        "id": "RI-2",
+        "agents": [
+          "A3",
+          "A4"
+        ],
+        "condition": {
+          "spatial": 0.83,
+          "temporal": 0.9,
+          "communication": 0.86
+        },
+        "constraint": "Eliminate the corresponding pre-action conflict",
+        "state": "resolved"
+      },
+      {
         "id": "RI-3",
         "agents": [
           "A3",
@@ -2290,7 +2345,7 @@ window.ADP_TRACE = [
       }
     ],
     "coherence": 0.67,
-    "conflictCount": 0,
+    "conflictCount": 1,
     "resources": [
       {
         "slot": "RB-1",
@@ -2311,33 +2366,25 @@ window.ADP_TRACE = [
     "reasoningRound": "r = 0",
     "operations": [
       {
-        "name": "Keep the current ADP",
+        "name": "Active ADP P1[k]",
         "members": "A1, A2, A3, A4",
-        "task": "baseline",
-        "coherence": 1.0,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "Stable operation continues but the newly discovered organizational gain is unused"
+        "status": "context",
+        "reason": "The original population remains active during admission validation"
       },
       {
-        "name": "Admit A5",
-        "members": "A1, A2, A3, A4, A5",
-        "task": "unchanged",
-        "coherence": 0.67,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "A5 lacks sufficient relationship support for population expansion"
+        "name": "New Candidate U2[k]",
+        "members": "A3, A6",
+        "status": "candidate",
+        "reason": "Algorithm 1 finds overlap {A3} and external member {A6}"
       },
       {
-        "name": "Admit A6",
+        "name": "Admission candidate U\u03031[k]",
         "members": "A1, A2, A3, A4, A6",
-        "task": "expanded",
-        "coherence": 1.0,
-        "conflicts": 0,
         "status": "selected",
-        "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial"
+        "reason": "U\u03031[k] = P1[k] \u222a U2[k]; activation still requires Algorithm 2"
       }
     ],
+    "discoveredCandidate": [],
     "newMembers": [
       "A6"
     ]
@@ -2345,8 +2392,8 @@ window.ADP_TRACE = [
   {
     "step": 15,
     "stage": "Expanded Active ADP",
-    "title": "New-member admission is confirmed",
-    "description": "A6 passes alignment validation, so the five-member population becomes active with full reasoning coherence and no prospective action conflict.",
+    "title": "Successful validation activates the expanded ADP",
+    "description": "Algorithm 2 reaches \u03a6=1 and C=0, so U\u03031 is activated as the new P1; otherwise, the original four-member P1 would have been retained.",
     "agents": [
       {
         "id": "A1",
@@ -2470,6 +2517,20 @@ window.ADP_TRACE = [
           "spatial": 0.86,
           "temporal": 0.92,
           "communication": 0.88
+        },
+        "constraint": "Eliminate the corresponding pre-action conflict",
+        "state": "resolved"
+      },
+      {
+        "id": "RI-2",
+        "agents": [
+          "A3",
+          "A4"
+        ],
+        "condition": {
+          "spatial": 0.83,
+          "temporal": 0.9,
+          "communication": 0.86
         },
         "constraint": "Eliminate the corresponding pre-action conflict",
         "state": "resolved"
@@ -2511,33 +2572,25 @@ window.ADP_TRACE = [
     "reasoningRound": "r = 1",
     "operations": [
       {
-        "name": "Keep the current ADP",
+        "name": "Active ADP P1[k]",
         "members": "A1, A2, A3, A4",
-        "task": "baseline",
-        "coherence": 1.0,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "Stable operation continues but the newly discovered organizational gain is unused"
+        "status": "context",
+        "reason": "The original population remains active during admission validation"
       },
       {
-        "name": "Admit A5",
-        "members": "A1, A2, A3, A4, A5",
-        "task": "unchanged",
-        "coherence": 0.67,
-        "conflicts": 0,
-        "status": "rejected",
-        "reason": "A5 lacks sufficient relationship support for population expansion"
+        "name": "New Candidate U2[k]",
+        "members": "A3, A6",
+        "status": "candidate",
+        "reason": "Algorithm 1 finds overlap {A3} and external member {A6}"
       },
       {
-        "name": "Admit A6",
+        "name": "Admission candidate U\u03031[k]",
         "members": "A1, A2, A3, A4, A6",
-        "task": "expanded",
-        "coherence": 1.0,
-        "conflicts": 0,
         "status": "selected",
-        "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial"
+        "reason": "U\u03031[k] = P1[k] \u222a U2[k]; activation still requires Algorithm 2"
       }
     ],
+    "discoveredCandidate": [],
     "newMembers": [
       "A6"
     ]
