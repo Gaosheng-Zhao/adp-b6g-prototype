@@ -62,16 +62,16 @@
 
   function setupBackground() {
     clear(els.background);
-    const horizontal = svgElement("rect", { x: 0, y: 225, width: 720, height: 90, class: "road" });
-    const vertical = svgElement("rect", { x: 305, y: 0, width: 90, height: 540, class: "road" });
-    const junction = svgElement("rect", { x: 305, y: 225, width: 90, height: 90, rx: 8, class: "intersection" });
-    const westPlatform = svgElement("rect", { x: 82, y: 205, width: 112, height: 38, rx: 7, class: "service-platform" });
-    const eastPlatform = svgElement("rect", { x: 506, y: 297, width: 112, height: 38, rx: 7, class: "service-platform" });
+    const horizontal = svgElement("rect", { x: 0, y: 190, width: 720, height: 160, class: "road" });
+    const vertical = svgElement("rect", { x: 270, y: 0, width: 160, height: 540, class: "road" });
+    const junction = svgElement("rect", { x: 270, y: 190, width: 160, height: 160, rx: 12, class: "intersection" });
+    const westPlatform = svgElement("rect", { x: 62, y: 178, width: 122, height: 42, rx: 7, class: "service-platform" });
+    const eastPlatform = svgElement("rect", { x: 536, y: 320, width: 122, height: 42, rx: 7, class: "service-platform" });
     const hLine = svgElement("line", { x1: 0, y1: 270, x2: 720, y2: 270, class: "lane-mark" });
     const vLine = svgElement("line", { x1: 350, y1: 0, x2: 350, y2: 540, class: "lane-mark" });
-    const ring = svgElement("circle", { cx: 350, cy: 270, r: 58, class: "bs-ring" });
-    const core = svgElement("circle", { cx: 350, cy: 270, r: 10, class: "bs-core" });
-    const label = svgElement("text", { x: 350, y: 250, class: "bs-label", "text-anchor": "middle" });
+    const ring = svgElement("circle", { cx: 650, cy: 70, r: 44, class: "bs-ring" });
+    const core = svgElement("circle", { cx: 650, cy: 70, r: 10, class: "bs-core" });
+    const label = svgElement("text", { x: 650, y: 50, class: "bs-label", "text-anchor": "middle" });
     label.textContent = "BS";
     const zoneLabel = svgElement("text", { x: 20, y: 520, class: "zone-label" });
     zoneLabel.textContent = "Controlled mobility zone · repeated operations";
@@ -90,6 +90,7 @@
     frame.relations.forEach(relation => {
       const source = agents[relation.source];
       const target = agents[relation.target];
+      if (!source || !target) return;
       const line = svgElement("line", {
         x1: source.x,
         y1: source.y,
@@ -118,6 +119,7 @@
     frame.conflicts.forEach(([sourceId, targetId]) => {
       const source = agents[sourceId];
       const target = agents[targetId];
+      if (!source || !target) return;
       els.conflictLayer.appendChild(svgElement("line", {
         x1: source.x,
         y1: source.y,
@@ -153,16 +155,40 @@
     frame.agents.forEach(agent => {
       const group = svgElement("g", { transform: `translate(${agent.x} ${agent.y})` });
       group.appendChild(svgElement("circle", { cx: 0, cy: 0, r: 31, class: "agent-halo" }));
+      const isNew = (frame.newMembers || []).includes(agent.id);
       const stateClass = frame.active && frame.candidate.includes(agent.id)
         ? " active"
         : frame.candidate.includes(agent.id) ? " candidate" : "";
-      group.appendChild(svgElement("circle", { cx: 0, cy: 0, r: 22, class: `agent-node${stateClass}` }));
+      const transitionClass = isNew ? " incoming" : "";
+      group.appendChild(svgElement("circle", { cx: 0, cy: 0, r: 22, class: `agent-node${stateClass}${transitionClass}` }));
       const id = svgElement("text", { x: 0, y: 5, class: "agent-label" });
       id.textContent = agent.id;
       const kind = svgElement("text", { x: 0, y: 39, class: "agent-kind" });
       kind.textContent = agent.kind;
       group.appendChild(id);
       group.appendChild(kind);
+      if (isNew) {
+        const badgeText = frame.step === 12
+          ? "NEW"
+          : frame.step === 13 ? "ADMITTED" : frame.step === 14 ? "ALIGNING" : "MEMBER";
+        const badgeWidth = badgeText.length * 6.2 + 14;
+        group.appendChild(svgElement("rect", {
+          x: 25,
+          y: -38,
+          width: badgeWidth,
+          height: 18,
+          rx: 9,
+          class: "member-badge incoming"
+        }));
+        const badge = svgElement("text", {
+          x: 25 + badgeWidth / 2,
+          y: -25,
+          class: "member-badge-text incoming",
+          "text-anchor": "middle"
+        });
+        badge.textContent = badgeText;
+        group.appendChild(badge);
+      }
       els.agents.appendChild(group);
     });
   }
@@ -208,7 +234,7 @@
   function currentPopulationStatus(frame) {
     if (frame.step === 10 || frame.step === 11 || frame.step === 12) return "Active ADP · degraded";
     if (frame.step === 13 || frame.step === 14) return "Revised Candidate ADP";
-    if (frame.step === 15) return "Evolved Active ADP";
+    if (frame.step === 15) return "Expanded Active ADP";
     if (frame.active) return "Active ADP";
     if (frame.candidate.length && frame.items.length) return "Candidate ADP · aligning";
     if (frame.candidate.length) return "Candidate ADP";
@@ -255,9 +281,9 @@
     }
 
     els.operationTitle.textContent = frame.step >= 13
-      ? "Replacement selected: A4 → A6"
+      ? "New-member admission selected: A6 joins the ADP"
       : "Three structural alternatives are screened";
-    els.operationDescription.textContent = "Task continuity is checked before coherence and residual conflict, preventing trivial metric improvement by simply deleting a required member.";
+    els.operationDescription.textContent = "Candidate members are screened by communication feasibility and conflict relevance before the expanded population is tested for coherence and residual conflict.";
     els.operationGrid.innerHTML = frame.operations.map(operation => `
       <article class="operation-card ${operation.status}">
         <span class="operation-status">${operation.status}</span>
