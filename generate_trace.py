@@ -70,26 +70,33 @@ CONFLICT_HISTORY = [
     [("A1", "A2"), ("A3", "A4")],
 ]
 
+# A later epoch contains recurring coordination demand between an existing
+# member A3 and the external agent A6. Algorithm 1 therefore discovers a new
+# Candidate ADP that overlaps the active population while crossing its boundary.
+EXPANSION_CONFLICT_HISTORY = [
+    [("A3", "A6")],
+    [("A3", "A6")],
+    [("A3", "A6")],
+]
 
-def conflict_counts() -> dict[tuple[str, str], int]:
+
+def conflict_counts(history: list[list[tuple[str, str]]]) -> dict[tuple[str, str], int]:
     counts: dict[tuple[str, str], int] = {}
-    for slot in CONFLICT_HISTORY:
+    for slot in history:
         for pair in slot:
             key = tuple(sorted(pair))
             counts[key] = counts.get(key, 0) + 1
     return counts
 
 
-def discover_candidate() -> list[str]:
+def discover_candidate(history: list[list[tuple[str, str]]]) -> list[str]:
     """Discover a compact candidate from recurring conflict endpoints.
 
     This is a deliberately small executable counterpart of Algorithm 1: use
     recurring conflicts as seeds and retain their EHC-connected endpoints.
     """
 
-    recurring_pairs = {
-        pair for pair, count in conflict_counts().items() if count >= 2
-    }
+    recurring_pairs = {pair for pair, count in conflict_counts(history).items() if count >= 2}
     candidate = {agent for pair in recurring_pairs for agent in pair}
 
     # Keep only endpoints supported by at least one sufficiently strong EHC edge.
@@ -146,6 +153,7 @@ def make_frame(
     reasoning_round: str,
     active: bool = False,
     operations: list[dict] | None = None,
+    discovered_candidate: list[str] | None = None,
 ) -> dict:
     # A6 enters the BS-visible EHC only when the next slow-timescale update
     # discovers a new organizational opportunity around the active ADP.
@@ -170,12 +178,14 @@ def make_frame(
         "fastSlot": fast_slot,
         "reasoningRound": reasoning_round,
         "operations": operations or [],
+        "discoveredCandidate": discovered_candidate or [],
         "newMembers": ["A6"] if 10 <= step <= 15 else [],
     }
 
 
 def build_trace() -> list[dict]:
-    candidate = discover_candidate()
+    candidate = discover_candidate(CONFLICT_HISTORY)
+    new_candidate = discover_candidate(EXPANSION_CONFLICT_HISTORY)
     base_items = generate_items(candidate)
     resolved_one = [dict(item) for item in base_items]
     resolved_one[0] = {**resolved_one[0], "state": "resolved"}
@@ -192,37 +202,28 @@ def build_trace() -> list[dict]:
         "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
         "state": "unresolved",
     }
-    admission_items = [resolved_all[0], admission_item]
+    admission_items = [*resolved_all, admission_item]
     admission_resolved = [
         {**item, "state": "resolved"} for item in admission_items
     ]
-    operation_candidates = [
+    admission_sets = [
         {
-            "name": "Keep the current ADP",
+            "name": "Active ADP P1[k]",
             "members": "A1, A2, A3, A4",
-            "task": "baseline",
-            "coherence": 1.00,
-            "conflicts": 0,
-            "status": "rejected",
-            "reason": "Stable operation continues but the newly discovered organizational gain is unused",
+            "status": "context",
+            "reason": "The original population remains active during admission validation",
         },
         {
-            "name": "Admit A5",
-            "members": "A1, A2, A3, A4, A5",
-            "task": "unchanged",
-            "coherence": 0.67,
-            "conflicts": 0,
-            "status": "rejected",
-            "reason": "A5 lacks sufficient relationship support for population expansion",
+            "name": "New Candidate U2[k]",
+            "members": "A3, A6",
+            "status": "candidate",
+            "reason": "Algorithm 1 finds overlap {A3} and external member {A6}",
         },
         {
-            "name": "Admit A6",
+            "name": "Admission candidate Ũ1[k]",
             "members": "A1, A2, A3, A4, A6",
-            "task": "expanded",
-            "coherence": 1.00,
-            "conflicts": 0,
             "status": "selected",
-            "reason": "A6 is communication-feasible, relationship-supported, and organizationally beneficial",
+            "reason": "Ũ1[k] = P1[k] ∪ U2[k]; activation still requires Algorithm 2",
         },
     ]
 
@@ -323,65 +324,67 @@ def build_trace() -> list[dict]:
         ),
         make_frame(
             10,
-            "EHC update",
-            "A new agent enters the relationship-aware view",
-            "While the four-member ADP remains coherent, the next slow-timescale EHC update makes the communication-feasible A6 and its relationship to A3 visible to the BS.",
-            candidate, resolved_all, "ehc", [], 1.0, 0, [],
-            "slow", "k = 4 · 60–80 s", "aggregated observations", "—",
+            "Cross-boundary demand",
+            "New coordination demand crosses the active ADP boundary",
+            "The active P1 remains internally coherent, while recurring A3-A6 pre-action conflicts accumulate across the boundary together with their persistent EHC relation.",
+            candidate, resolved_all, "ehc", [["A3", "A6"]], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "accumulated slots", "—",
             active=True,
         ),
         make_frame(
             11,
-            "New-member discovery",
-            "ADP discovery identifies A6 as an expansion candidate",
-            "Expansion from the active ADP along the updated EHC relation structure identifies A6 as a communication-feasible, relationship-supported candidate member.",
-            candidate, resolved_all, "dependencies", [], 1.0, 0, [],
-            "slow", "k = 4 · 60–80 s", "discovery", "—",
+            "Candidate ADP discovery",
+            "Algorithm 1 discovers an overlapping Candidate ADP",
+            "From the recurring A3-A6 coordination demand, Algorithm 1 discovers U2={A3,A6}, which overlaps active P1 at A3 and introduces external member A6.",
+            candidate, resolved_all, "ehc", [["A3", "A6"]], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "Algorithm 1", "—",
             active=True,
+            discovered_candidate=new_candidate,
         ),
         make_frame(
             12,
-            "Admission evaluation",
-            "The BS evaluates whether A6 should join",
-            "The BS compares the organizational gain of admitting relationship-supported A6 against its maintenance and alignment costs while the existing ADP continues normal operation.",
-            candidate, resolved_all, "ehc", [], 1.0, 0, [],
-            "slow", "k = 4 · 60–80 s", "admission screening", "—",
+            "Admission operation",
+            "Candidate overlap forms an admission candidate",
+            "Because U2 overlaps one active ADP and extends beyond its boundary, the edge unit forms Ũ1=P1∪U2 while retaining the original active P1 during validation.",
+            candidate, resolved_all, "ehc", [["A3", "A6"]], 1.0, 0, [],
+            "slow", "k = 4 · 60–80 s", "set union", "—",
             active=True,
-            operations=operation_candidates,
+            operations=admission_sets,
+            discovered_candidate=new_candidate,
         ),
         make_frame(
             13,
-            "Population expansion",
-            "A6 joins an expanded Candidate ADP",
-            "A6 passes admission evaluation and is added without removing any current member. The five-member population remains a Candidate ADP until new-member alignment succeeds.",
-            expanded_candidate, admission_items, "ehc", [], 0.67, 0, [],
+            "Expanded Candidate ADP",
+            "The union enters fast-timescale validation",
+            "Ũ1 contains P1 and the external member A6 but is not yet active; its unresolved cross-boundary reasoning item RI-3 must be aligned first.",
+            expanded_candidate, admission_items, "ehc", [["A3", "A6"]], 0.67, 1, [],
             "slow", "k = 5 · 80–100 s", "epoch boundary", "—",
-            operations=operation_candidates,
+            operations=admission_sets,
         ),
         make_frame(
             14,
-            "Expanded-ADP alignment",
-            "The five-member population re-enters Algorithm 2",
-            "The BS schedules A3 and the admitted A6 for RI-3 to align the new member with the active population's task-relevant decision basis.",
-            expanded_candidate, admission_items, "ehc", [], 0.67, 0,
+            "Expansion validation",
+            "Algorithm 2 aligns the expanded Candidate ADP",
+            "The BS schedules A3 and A6 for RI-3 and tests whether Ũ1 can reach full reasoning coherence with no residual action conflict.",
+            expanded_candidate, admission_items, "ehc", [["A3", "A6"]], 0.67, 1,
             [
                 {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "scheduled"},
                 {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "scheduled"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 0",
-            operations=operation_candidates,
+            operations=admission_sets,
         ),
         make_frame(
             15,
             "Expanded Active ADP",
-            "New-member admission is confirmed",
-            "A6 passes alignment validation, so the five-member population becomes active with full reasoning coherence and no prospective action conflict.",
+            "Successful validation activates the expanded ADP",
+            "Algorithm 2 reaches Φ=1 and C=0, so Ũ1 is activated as the new P1; otherwise, the original four-member P1 would have been retained.",
             expanded_candidate, admission_resolved, "ehc", [], 1.0, 0,
             [
                 {"slot": "RB-1", "item": "RI-3", "agent": "A3", "state": "completed"},
                 {"slot": "RB-2", "item": "RI-3", "agent": "A6", "state": "completed"},
             ], "fast", "k = 5 · 80–100 s", "t = 801 · <100 ms", "r = 1",
             active=True,
-            operations=operation_candidates,
+            operations=admission_sets,
         ),
     ]
 
