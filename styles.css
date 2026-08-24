@@ -359,7 +359,7 @@ h1 {
 
 #network-svg { display: block; width: 100%; height: auto; }
 
-.road { fill: #15243a; }
+.road { fill: #15243a; stroke: rgba(107, 142, 181, 0.18); stroke-width: 2; }
 .intersection { fill: #213653; stroke: #3b5f85; stroke-width: 1.5; }
 .service-platform { fill: rgba(107, 168, 255, 0.12); stroke: rgba(107, 168, 255, 0.45); stroke-width: 1.5; }
 .zone-label { fill: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -393,8 +393,13 @@ h1 {
 .agent-node { fill: #172a43; stroke: #6b8eb5; stroke-width: 2; }
 .agent-node.candidate { stroke: var(--amber); stroke-width: 3; }
 .agent-node.active { fill: rgba(101, 223, 155, 0.18); stroke: var(--green); stroke-width: 3; }
+.agent-node.incoming { fill: rgba(85, 215, 221, 0.18); stroke: var(--cyan); stroke-width: 3.5; }
 .agent-label { fill: var(--text); font-size: 13px; font-weight: 700; text-anchor: middle; }
 .agent-kind { fill: var(--muted); font-size: 10px; text-anchor: middle; }
+.member-badge { stroke-width: 1; }
+.member-badge.incoming { fill: rgba(85, 215, 221, 0.14); stroke: var(--cyan); }
+.member-badge-text { font-size: 8px; font-weight: 800; letter-spacing: 0.08em; }
+.member-badge-text.incoming { fill: var(--cyan); }
 
 .legend {
   position: absolute;
