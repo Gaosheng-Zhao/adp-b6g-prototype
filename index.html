@@ -72,7 +72,7 @@
         <div class="network-canvas" id="network-canvas">
           <svg id="network-svg" viewBox="0 0 720 540" role="img" aria-labelledby="network-title network-desc">
             <title id="network-title">Wireless network to ADP transition</title>
-            <desc id="network-desc">A BS observes six agents in a controlled mobility zone. Slow-timescale relationship edges and Candidate ADP boundaries appear before fast-timescale reasoning alignment activates the ADP.</desc>
+            <desc id="network-desc">A roadside BS observes agents around a traffic intersection. Slow-timescale relationship edges and Candidate ADP boundaries appear before fast-timescale reasoning alignment activates the ADP; population evolution can later admit a newly discovered member.</desc>
             <g id="scene-background"></g>
             <g id="population-boundary"></g>
             <g id="relation-layer"></g>
@@ -142,20 +142,20 @@
       <div class="feedback-spine" aria-label="Cross-timescale feedback loop">
         <div class="feedback-step" id="feedback-fast-evidence">
           <span>01 · Fast evidence</span>
-          <strong>Repeated unresolved items</strong>
-          <p>Terminal coherence, residual conflicts, and affected-member patterns accumulate across slots.</p>
+          <strong>Persistent conflict triggers expansion</strong>
+          <p>Repeated unresolved items show that the current ADP cannot remove the action conflict within its fast alignment budget.</p>
         </div>
         <div class="feedback-arrow">→</div>
         <div class="feedback-step" id="feedback-slow-operation">
           <span>02 · Slow operation</span>
-          <strong>Revise the population boundary</strong>
-          <p>Retain, remove, replace, split, merge, or dissolve are screened against task continuity.</p>
+          <strong>Discover and admit a new member</strong>
+          <p>The BS uses the EHC to select a communication-feasible agent whose dependencies are relevant to the unresolved conflict, then expands the Candidate ADP.</p>
         </div>
         <div class="feedback-arrow">→</div>
         <div class="feedback-step" id="feedback-fast-validation">
           <span>03 · Fast validation</span>
-          <strong>Re-run reasoning alignment</strong>
-          <p>Only a revised candidate reaching full coherence and zero conflict becomes active.</p>
+          <strong>Validate the expanded ADP</strong>
+          <p>The admitted member joins item-level reasoning alignment; admission is confirmed only when coherence recovers and the residual conflict disappears.</p>
         </div>
       </div>
 
