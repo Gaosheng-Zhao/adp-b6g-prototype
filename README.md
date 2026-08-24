@@ -21,7 +21,7 @@ The visualization separates the two timescales used by the framework:
 - Slow organizational epochs (illustrated as approximately 20 s): dependency accumulation, EHC construction, Candidate ADP discovery, and population evolution.
 - Fast decision slots (illustrated as below 100 ms): pre-action conflict detection, reasoning-item generation, wireless resource scheduling, and incremental reasoning alignment.
 
-The browser demo is organized as a long-form, three-part walkthrough: slow EHC/Candidate ADP formation, fast reasoning alignment and activation, and cross-timescale coherence maintenance through population operations. During evolution, A6 first enters the EHC view as a newly discovered agent, expands the existing ADP without removing A4, and must join fast-timescale reasoning alignment before the five-member population becomes active.
+The browser demo is organized as a long-form, three-part walkthrough: slow EHC/Candidate ADP formation, fast reasoning alignment and activation, and cross-timescale ADP evolution. During evolution, a periodic EHC update lets ADP discovery identify A6 as a communication-feasible and relationship-supported new member. A6 expands the existing ADP without removing A4 and must pass fast-timescale reasoning alignment before the five-member population becomes active.
 
 ## Run
 
