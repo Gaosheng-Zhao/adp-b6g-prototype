@@ -202,7 +202,7 @@
   function renderItems(frame) {
     els.itemCount.textContent = `${frame.items.length} item${frame.items.length === 1 ? "" : "s"}`;
     if (!frame.items.length) {
-      els.itemList.innerHTML = '<p class="empty-state">Reasoning items appear when a Candidate ADP contains current pre-action conflicts.</p>';
+      els.itemList.innerHTML = '<p class="empty-state">Reasoning items appear when cross-agent dependencies and pre-action interactions establish or revise population-level decision constraints.</p>';
       return;
     }
 
@@ -218,7 +218,7 @@
             <span class="item-id">${item.id}</span>
             <span class="item-state">${item.state}</span>
           </div>
-          <div class="item-agents">Affected members: ${item.agents.join(" + ")}</div>
+          <div class="item-agents"><span>Affected scope · ${item.agents.length} members</span><strong>${item.agents.join(" · ")}</strong></div>
           <div class="dependency-bars">${bars}</div>
         </article>`;
     }).join("");
