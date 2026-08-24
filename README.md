@@ -10,7 +10,7 @@ Wireless observations
   -> EHC relation structure
   -> recurring pre-action conflicts
   -> Candidate ADP
-  -> reasoning items
+  -> population reasoning items with multi-member affected scopes
   -> BS-side wireless resource scheduling
   -> reasoning alignment
   -> Active ADP
