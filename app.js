@@ -1,0 +1,374 @@
+(function () {
+  "use strict";
+
+  const trace = window.ADP_TRACE;
+  if (!Array.isArray(trace) || trace.length === 0) {
+    document.body.innerHTML = "<p>Prototype trace is missing. Run generate_trace.py.</p>";
+    return;
+  }
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const els = {
+    tracks: [
+      document.getElementById("slow-stage-track"),
+      document.getElementById("fast-stage-track"),
+      document.getElementById("evolution-stage-track")
+    ],
+    kicker: document.getElementById("stage-kicker"),
+    title: document.getElementById("stage-title"),
+    description: document.getElementById("stage-description"),
+    populationStatus: document.getElementById("population-status"),
+    coherence: document.getElementById("coherence-value"),
+    conflicts: document.getElementById("conflict-value"),
+    itemCount: document.getElementById("item-count"),
+    itemList: document.getElementById("item-list"),
+    resourceGrid: document.getElementById("resource-grid"),
+    background: document.getElementById("scene-background"),
+    boundary: document.getElementById("population-boundary"),
+    relations: document.getElementById("relation-layer"),
+    conflictLayer: document.getElementById("conflict-layer"),
+    agents: document.getElementById("agent-layer"),
+    previous: document.getElementById("previous-button"),
+    play: document.getElementById("play-button"),
+    next: document.getElementById("next-button"),
+    timeline: document.getElementById("timeline"),
+    stepValue: document.getElementById("step-value")
+  };
+  els.slowLane = document.getElementById("slow-lane");
+  els.fastLane = document.getElementById("fast-lane");
+  els.slowEpoch = document.getElementById("slow-epoch");
+  els.fastSlot = document.getElementById("fast-slot");
+  els.reasoningRound = document.getElementById("reasoning-round");
+  els.operationTitle = document.getElementById("operation-title");
+  els.operationDescription = document.getElementById("operation-description");
+  els.operationGrid = document.getElementById("operation-grid");
+  els.alignmentStatus = document.getElementById("alignment-status");
+  els.feedbackFast = document.getElementById("feedback-fast-evidence");
+  els.feedbackSlow = document.getElementById("feedback-slow-operation");
+  els.feedbackValidation = document.getElementById("feedback-fast-validation");
+
+  let index = 0;
+  let timer = null;
+
+  function svgElement(tag, attrs = {}) {
+    const node = document.createElementNS(svgNS, tag);
+    Object.entries(attrs).forEach(([name, value]) => node.setAttribute(name, value));
+    return node;
+  }
+
+  function clear(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function setupBackground() {
+    clear(els.background);
+    const horizontal = svgElement("rect", { x: 0, y: 225, width: 720, height: 90, class: "road" });
+    const vertical = svgElement("rect", { x: 305, y: 0, width: 90, height: 540, class: "road" });
+    const junction = svgElement("rect", { x: 305, y: 225, width: 90, height: 90, rx: 8, class: "intersection" });
+    const westPlatform = svgElement("rect", { x: 82, y: 205, width: 112, height: 38, rx: 7, class: "service-platform" });
+    const eastPlatform = svgElement("rect", { x: 506, y: 297, width: 112, height: 38, rx: 7, class: "service-platform" });
+    const hLine = svgElement("line", { x1: 0, y1: 270, x2: 720, y2: 270, class: "lane-mark" });
+    const vLine = svgElement("line", { x1: 350, y1: 0, x2: 350, y2: 540, class: "lane-mark" });
+    const ring = svgElement("circle", { cx: 350, cy: 270, r: 58, class: "bs-ring" });
+    const core = svgElement("circle", { cx: 350, cy: 270, r: 10, class: "bs-core" });
+    const label = svgElement("text", { x: 350, y: 250, class: "bs-label", "text-anchor": "middle" });
+    label.textContent = "BS";
+    const zoneLabel = svgElement("text", { x: 20, y: 520, class: "zone-label" });
+    zoneLabel.textContent = "Controlled mobility zone · repeated operations";
+    [horizontal, vertical, westPlatform, eastPlatform, hLine, vLine, ring, junction, core, label, zoneLabel].forEach(node => els.background.appendChild(node));
+  }
+
+  function agentMap(frame) {
+    return Object.fromEntries(frame.agents.map(agent => [agent.id, agent]));
+  }
+
+  function renderRelations(frame) {
+    clear(els.relations);
+    if (!frame.visibleRelations) return;
+    const agents = agentMap(frame);
+
+    frame.relations.forEach(relation => {
+      const source = agents[relation.source];
+      const target = agents[relation.target];
+      const line = svgElement("line", {
+        x1: source.x,
+        y1: source.y,
+        x2: target.x,
+        y2: target.y,
+        class: `relation-edge ${frame.visibleRelations}`
+      });
+      els.relations.appendChild(line);
+
+      if (frame.visibleRelations === "dependencies") {
+        const label = svgElement("text", {
+          x: (source.x + target.x) / 2,
+          y: (source.y + target.y) / 2 - 7,
+          class: "relation-label",
+          "text-anchor": "middle"
+        });
+        label.textContent = `S ${relation.spatial.toFixed(2)} · T ${relation.temporal.toFixed(2)} · C ${relation.communication.toFixed(2)}`;
+        els.relations.appendChild(label);
+      }
+    });
+  }
+
+  function renderConflicts(frame) {
+    clear(els.conflictLayer);
+    const agents = agentMap(frame);
+    frame.conflicts.forEach(([sourceId, targetId]) => {
+      const source = agents[sourceId];
+      const target = agents[targetId];
+      els.conflictLayer.appendChild(svgElement("line", {
+        x1: source.x,
+        y1: source.y,
+        x2: target.x,
+        y2: target.y,
+        class: "conflict-edge"
+      }));
+    });
+  }
+
+  function renderBoundary(frame) {
+    clear(els.boundary);
+    if (!frame.candidate.length) return;
+    const agents = agentMap(frame);
+    const points = frame.candidate.map(id => agents[id]);
+    const minX = Math.min(...points.map(point => point.x)) - 48;
+    const maxX = Math.max(...points.map(point => point.x)) + 48;
+    const minY = Math.min(...points.map(point => point.y)) - 48;
+    const maxY = Math.max(...points.map(point => point.y)) + 48;
+    const polygon = svgElement("rect", {
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+      rx: 70,
+      class: `population-boundary${frame.active ? " active" : ""}`
+    });
+    els.boundary.appendChild(polygon);
+  }
+
+  function renderAgents(frame) {
+    clear(els.agents);
+    frame.agents.forEach(agent => {
+      const group = svgElement("g", { transform: `translate(${agent.x} ${agent.y})` });
+      group.appendChild(svgElement("circle", { cx: 0, cy: 0, r: 31, class: "agent-halo" }));
+      const stateClass = frame.active && frame.candidate.includes(agent.id)
+        ? " active"
+        : frame.candidate.includes(agent.id) ? " candidate" : "";
+      group.appendChild(svgElement("circle", { cx: 0, cy: 0, r: 22, class: `agent-node${stateClass}` }));
+      const id = svgElement("text", { x: 0, y: 5, class: "agent-label" });
+      id.textContent = agent.id;
+      const kind = svgElement("text", { x: 0, y: 39, class: "agent-kind" });
+      kind.textContent = agent.kind;
+      group.appendChild(id);
+      group.appendChild(kind);
+      els.agents.appendChild(group);
+    });
+  }
+
+  function renderItems(frame) {
+    els.itemCount.textContent = `${frame.items.length} item${frame.items.length === 1 ? "" : "s"}`;
+    if (!frame.items.length) {
+      els.itemList.innerHTML = '<p class="empty-state">Reasoning items appear when a Candidate ADP contains current pre-action conflicts.</p>';
+      return;
+    }
+
+    els.itemList.innerHTML = frame.items.map(item => {
+      const bars = Object.entries(item.condition).map(([name, value]) => `
+        <div>
+          <span>${name[0].toUpperCase()}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round(value * 100)}%"></div></div>
+        </div>`).join("");
+      return `
+        <article class="reasoning-item ${item.state}">
+          <div class="item-top">
+            <span class="item-id">${item.id}</span>
+            <span class="item-state">${item.state}</span>
+          </div>
+          <div class="item-agents">Affected members: ${item.agents.join(" + ")}</div>
+          <div class="dependency-bars">${bars}</div>
+        </article>`;
+    }).join("");
+  }
+
+  function renderResources(frame) {
+    if (!frame.resources.length) {
+      els.resourceGrid.innerHTML = '<p class="empty-state">Resources are scheduled after reasoning items are instantiated.</p>';
+      return;
+    }
+    els.resourceGrid.innerHTML = frame.resources.map(resource => `
+      <div class="resource-row ${resource.state}">
+        <span class="rb">${resource.slot}</span>
+        <span>${resource.item} · ${resource.agent}</span>
+        <span class="resource-state">${resource.state}</span>
+      </div>`).join("");
+  }
+
+  function currentPopulationStatus(frame) {
+    if (frame.step === 10 || frame.step === 11 || frame.step === 12) return "Active ADP · degraded";
+    if (frame.step === 13 || frame.step === 14) return "Revised Candidate ADP";
+    if (frame.step === 15) return "Evolved Active ADP";
+    if (frame.active) return "Active ADP";
+    if (frame.candidate.length && frame.items.length) return "Candidate ADP · aligning";
+    if (frame.candidate.length) return "Candidate ADP";
+    if (frame.visibleRelations === "ehc") return "EHC relation space";
+    return "Unorganized agents";
+  }
+
+  function renderChain(frame) {
+    const order = ["network", "ehc", "candidate", "reasoning", "active"];
+    let reached = 0;
+    if (frame.step >= 2) reached = 1;
+    if (frame.step >= 4) reached = 2;
+    if (frame.step >= 5) reached = 3;
+    if (frame.active) reached = 4;
+    document.querySelectorAll(".chain-node").forEach(node => {
+      const position = order.indexOf(node.dataset.chain);
+      node.classList.toggle("reached", position <= reached);
+      node.classList.toggle("current", position === reached);
+    });
+  }
+
+  function renderFeedback(frame) {
+    const feedbackSteps = [els.feedbackFast, els.feedbackSlow, els.feedbackValidation];
+    let reached = -1;
+    if (frame.step >= 10) reached = 0;
+    if (frame.step >= 11) reached = 1;
+    if (frame.step >= 14) reached = 2;
+    feedbackSteps.forEach((step, position) => {
+      step.classList.toggle("reached", position <= reached);
+      step.classList.toggle("current", position === reached);
+    });
+  }
+
+  function renderOperations(frame) {
+    if (!frame.operations.length) {
+      els.operationTitle.textContent = frame.step < 10
+        ? "No structural operation is currently required"
+        : "Structural evidence is still accumulating";
+      els.operationDescription.textContent = frame.step < 10
+        ? "The operation comparison appears after repeated fast-timescale failures provide sufficient structural evidence."
+        : "A single failed slot is insufficient; the BS waits for a repeated affected-member pattern at the slow epoch boundary.";
+      els.operationGrid.innerHTML = '<div class="operation-empty">Candidate operations will be evaluated here after persistent coherence loss and residual conflict are observed.</div>';
+      return;
+    }
+
+    els.operationTitle.textContent = frame.step >= 13
+      ? "Replacement selected: A4 → A6"
+      : "Three structural alternatives are screened";
+    els.operationDescription.textContent = "Task continuity is checked before coherence and residual conflict, preventing trivial metric improvement by simply deleting a required member.";
+    els.operationGrid.innerHTML = frame.operations.map(operation => `
+      <article class="operation-card ${operation.status}">
+        <span class="operation-status">${operation.status}</span>
+        <h3>${operation.name}</h3>
+        <div class="operation-members">Members: ${operation.members}</div>
+        <div class="operation-metrics">
+          <div><span>Task</span><strong>${operation.task}</strong></div>
+          <div><span>Φ</span><strong>${operation.coherence.toFixed(2)}</strong></div>
+          <div><span>C</span><strong>${operation.conflicts}</strong></div>
+        </div>
+        <p class="operation-reason">${operation.reason}</p>
+      </article>`).join("");
+  }
+
+  function renderStageTracks() {
+    const groups = [[0, 5], [5, 10], [10, trace.length]];
+    els.tracks.forEach((track, groupIndex) => {
+      const [start, end] = groups[groupIndex];
+      track.innerHTML = trace.slice(start, end).map((frame, localIndex) => {
+        const frameIndex = start + localIndex;
+        return `
+          <button type="button" class="stage-button" data-index="${frameIndex}">
+            <span>${String(frameIndex + 1).padStart(2, "0")}</span>${frame.stage}
+          </button>`;
+      }).join("");
+      track.addEventListener("click", event => {
+        const button = event.target.closest("button[data-index]");
+        if (!button) return;
+        stopPlayback();
+        setIndex(Number(button.dataset.index));
+      });
+    });
+  }
+
+  function render() {
+    const frame = trace[index];
+    els.kicker.textContent = frame.stage;
+    els.title.textContent = frame.title;
+    els.description.textContent = frame.description;
+    const populationStatus = currentPopulationStatus(frame);
+    els.populationStatus.textContent = populationStatus;
+    els.alignmentStatus.textContent = populationStatus;
+    els.populationStatus.style.color = frame.step >= 10 && frame.step <= 12
+      ? "var(--red)"
+      : frame.active ? "var(--green)" : frame.candidate.length ? "var(--amber)" : "var(--blue)";
+    els.coherence.textContent = frame.coherence.toFixed(2);
+    els.conflicts.textContent = String(frame.conflictCount);
+    els.slowEpoch.textContent = frame.slowEpoch;
+    els.fastSlot.textContent = frame.fastSlot;
+    els.reasoningRound.textContent = frame.reasoningRound;
+    els.slowLane.classList.toggle("active", frame.timescale === "slow");
+    els.fastLane.classList.toggle("active", frame.timescale === "fast");
+    els.timeline.value = String(index);
+    els.stepValue.textContent = `${index + 1} / ${trace.length}`;
+    els.previous.disabled = index === 0;
+    els.next.disabled = index === trace.length - 1;
+    document.querySelectorAll(".stage-button").forEach(button => {
+      button.classList.toggle("active", Number(button.dataset.index) === index);
+    });
+
+    renderBoundary(frame);
+    renderRelations(frame);
+    renderConflicts(frame);
+    renderAgents(frame);
+    renderItems(frame);
+    renderResources(frame);
+    renderChain(frame);
+    renderFeedback(frame);
+    renderOperations(frame);
+  }
+
+  function setIndex(nextIndex) {
+    index = Math.max(0, Math.min(trace.length - 1, nextIndex));
+    render();
+  }
+
+  function stopPlayback() {
+    if (timer !== null) window.clearInterval(timer);
+    timer = null;
+    els.play.textContent = "Play";
+  }
+
+  function togglePlayback() {
+    if (timer !== null) {
+      stopPlayback();
+      return;
+    }
+    if (index === trace.length - 1) setIndex(0);
+    els.play.textContent = "Pause";
+    timer = window.setInterval(() => {
+      if (index >= trace.length - 1) {
+        stopPlayback();
+      } else {
+        setIndex(index + 1);
+      }
+    }, 1900);
+  }
+
+  els.previous.addEventListener("click", () => { stopPlayback(); setIndex(index - 1); });
+  els.next.addEventListener("click", () => { stopPlayback(); setIndex(index + 1); });
+  els.play.addEventListener("click", togglePlayback);
+  els.timeline.addEventListener("input", event => { stopPlayback(); setIndex(Number(event.target.value)); });
+  document.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft") { stopPlayback(); setIndex(index - 1); }
+    if (event.key === "ArrowRight") { stopPlayback(); setIndex(index + 1); }
+    if (event.key === " ") { event.preventDefault(); togglePlayback(); }
+  });
+
+  setupBackground();
+  renderStageTracks();
+  els.timeline.max = String(trace.length - 1);
+  render();
+})();
+
