@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive prototype showing the transition from a wireless network to an Autonomous Digital Population.">
+  <title>From Wireless Network to ADP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">BS-side EHC–ADP prototype</p>
+        <h1>From Wireless Network to an Active ADP</h1>
+        <p class="subtitle">A stable mobility-zone organization forms over slow epochs, then aligns current actions inside a fast decision slot.</p>
+      </div>
+      <div class="status-block" aria-live="polite">
+        <span class="status-label">Population state</span>
+        <strong id="population-status">Unorganized agents</strong>
+      </div>
+    </header>
+
+    <nav class="chapter-nav" aria-label="Prototype chapters">
+      <a href="#formation"><span>Part I</span>Slow formation</a>
+      <a href="#alignment"><span>Part II</span>Fast alignment</a>
+      <a href="#evolution"><span>Part III</span>Population evolution</a>
+    </nav>
+
+    <div class="controls" aria-label="Global lifecycle controls">
+      <button type="button" id="previous-button" aria-label="Previous stage">← Previous</button>
+      <button type="button" id="play-button" class="primary" aria-label="Play transition">Play</button>
+      <label class="timeline-label" for="timeline">Lifecycle progress</label>
+      <input type="range" id="timeline" min="0" max="15" step="1" value="0">
+      <span id="step-value">1 / 16</span>
+      <button type="button" id="next-button" aria-label="Next stage">Next →</button>
+    </div>
+
+    <section class="story-section formation-story" id="formation" aria-labelledby="formation-title">
+      <div class="story-heading">
+        <div>
+          <p class="part-number">Part I · Slow organizational timescale</p>
+          <h2 id="formation-title">From Network Observations to a Candidate ADP</h2>
+        </div>
+        <p>Relationship evidence accumulates over multiple fast slots. The EHC then connects recurring coordination demand to a stable candidate population.</p>
+      </div>
+      <nav class="section-stage-track" id="slow-stage-track" aria-label="Slow formation stages"></nav>
+
+      <section class="timescale-panel" aria-label="Two-timescale operation">
+        <div class="timescale-lane" id="slow-lane">
+          <div class="timescale-name"><strong>Slow organizational timescale</strong><span>≈20 s per epoch</span></div>
+          <div class="timescale-flow"><span>Measure dependencies</span><i>→</i><span>Update EHC</span><i>→</i><span>Discover Candidate ADP</span></div>
+        </div>
+        <div class="timescale-lane" id="fast-lane">
+          <div class="timescale-name"><strong>Fast decision timescale</strong><span>&lt;100 ms per slot</span></div>
+          <div class="timescale-flow"><span>Generate items</span><i>→</i><span>Schedule resources</span><i>→</i><span>Align actions</span></div>
+        </div>
+        <div class="clock-readout">
+          <div><span>Epoch</span><strong id="slow-epoch">k = 1</strong></div>
+          <div><span>Slot</span><strong id="fast-slot">sampling</strong></div>
+          <div><span>Round</span><strong id="reasoning-round">—</strong></div>
+        </div>
+      </section>
+
+      <div class="network-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="stage-kicker" id="stage-kicker"></p>
+            <h2 id="stage-title"></h2>
+          </div>
+        </div>
+        <div class="network-canvas" id="network-canvas">
+          <svg id="network-svg" viewBox="0 0 720 540" role="img" aria-labelledby="network-title network-desc">
+            <title id="network-title">Wireless network to ADP transition</title>
+            <desc id="network-desc">A BS observes six agents in a controlled mobility zone. Slow-timescale relationship edges and Candidate ADP boundaries appear before fast-timescale reasoning alignment activates the ADP.</desc>
+            <g id="scene-background"></g>
+            <g id="population-boundary"></g>
+            <g id="relation-layer"></g>
+            <g id="conflict-layer"></g>
+            <g id="agent-layer"></g>
+          </svg>
+          <div class="legend" aria-label="Visual legend">
+            <span><i class="legend-line dependency"></i>EHC relation</span>
+            <span><i class="legend-line conflict"></i>Action conflict</span>
+            <span><i class="legend-box candidate"></i>Candidate ADP</span>
+            <span><i class="legend-box active"></i>Active ADP</span>
+          </div>
+        </div>
+        <p class="stage-description" id="stage-description"></p>
+      </div>
+    </section>
+
+    <section class="story-section alignment-story" id="alignment" aria-labelledby="alignment-title">
+      <div class="story-heading">
+        <div>
+          <p class="part-number">Part II · Fast decision timescale</p>
+          <h2 id="alignment-title">From Candidate ADP to Reasoning-Aligned Operation</h2>
+        </div>
+        <p>Current conflicts instantiate reasoning items. Limited BS-scheduled wireless resources determine which affected members can contribute to each alignment round.</p>
+      </div>
+      <nav class="section-stage-track" id="fast-stage-track" aria-label="Fast alignment stages"></nav>
+
+      <div class="alignment-metrics" aria-label="Population metrics">
+        <div><span>Population state</span><strong id="alignment-status">Unorganized agents</strong></div>
+        <div><span>Coherence</span><strong id="coherence-value">0.00</strong></div>
+        <div><span>Residual conflicts</span><strong id="conflict-value">0</strong></div>
+      </div>
+
+      <div class="reasoning-panel">
+        <section>
+          <div class="section-label"><span>Population reasoning state</span><span id="item-count">0 items</span></div>
+          <div class="item-list" id="item-list">
+            <p class="empty-state">Reasoning items appear when a Candidate ADP contains current pre-action conflicts.</p>
+          </div>
+        </section>
+        <section>
+          <div class="section-label"><span>BS wireless resource schedule</span><span>fast slot</span></div>
+          <div class="resource-grid" id="resource-grid">
+            <p class="empty-state">Resources are scheduled after reasoning items are instantiated.</p>
+          </div>
+        </section>
+        <section class="logic-chain" aria-label="Current transformation chain">
+          <div class="chain-node" data-chain="network">Network</div><div class="chain-arrow">→</div>
+          <div class="chain-node" data-chain="ehc">EHC</div><div class="chain-arrow">→</div>
+          <div class="chain-node" data-chain="candidate">Candidate</div><div class="chain-arrow">→</div>
+          <div class="chain-node" data-chain="reasoning">Reasoning</div><div class="chain-arrow">→</div>
+          <div class="chain-node" data-chain="active">ADP</div>
+        </section>
+      </div>
+    </section>
+
+    <section class="story-section evolution-section" id="evolution" aria-labelledby="evolution-title">
+      <div class="evolution-heading">
+        <div>
+          <p class="part-number">Part III · Cross-timescale feedback</p>
+          <h2 id="evolution-title">Coherence Maintenance Through Population Operations</h2>
+        </div>
+        <p>Fast-timescale failures become slow-timescale structural evidence. Every revised membership must return to fast reasoning alignment before activation.</p>
+      </div>
+      <nav class="section-stage-track" id="evolution-stage-track" aria-label="Population evolution stages"></nav>
+
+      <div class="feedback-spine" aria-label="Cross-timescale feedback loop">
+        <div class="feedback-step" id="feedback-fast-evidence">
+          <span>01 · Fast evidence</span>
+          <strong>Repeated unresolved items</strong>
+          <p>Terminal coherence, residual conflicts, and affected-member patterns accumulate across slots.</p>
+        </div>
+        <div class="feedback-arrow">→</div>
+        <div class="feedback-step" id="feedback-slow-operation">
+          <span>02 · Slow operation</span>
+          <strong>Revise the population boundary</strong>
+          <p>Retain, remove, replace, split, merge, or dissolve are screened against task continuity.</p>
+        </div>
+        <div class="feedback-arrow">→</div>
+        <div class="feedback-step" id="feedback-fast-validation">
+          <span>03 · Fast validation</span>
+          <strong>Re-run reasoning alignment</strong>
+          <p>Only a revised candidate reaching full coherence and zero conflict becomes active.</p>
+        </div>
+      </div>
+
+      <div class="operation-area">
+        <div class="operation-intro">
+          <span class="section-label-text">Candidate population operations</span>
+          <strong id="operation-title">No structural operation is currently required</strong>
+          <p id="operation-description">The operation comparison appears after repeated fast-timescale failures provide sufficient structural evidence.</p>
+        </div>
+        <div class="operation-grid" id="operation-grid"></div>
+      </div>
+    </section>
+
+    <footer class="page-footer">A local BS-side prototype linking communication observations, EHC organization, reasoning alignment, and population evolution.</footer>
+  </main>
+
+  <script src="data/trace.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
