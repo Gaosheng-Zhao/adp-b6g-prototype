@@ -389,6 +389,13 @@ h1 {
   stroke-dasharray: none;
 }
 
+.population-boundary.discovered {
+  fill: rgba(255, 189, 89, 0.08);
+  stroke: var(--amber);
+  stroke-width: 3;
+  stroke-dasharray: 7 6;
+}
+
 .agent-halo { fill: rgba(107, 168, 255, 0.13); }
 .agent-node { fill: #172a43; stroke: #6b8eb5; stroke-width: 2; }
 .agent-node.candidate { stroke: var(--amber); stroke-width: 3; }
