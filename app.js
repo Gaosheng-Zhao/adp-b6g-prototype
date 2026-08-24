@@ -168,9 +168,12 @@
       group.appendChild(id);
       group.appendChild(kind);
       if (isNew) {
-        const badgeText = frame.step === 12
+        const badgeText = frame.step === 10
           ? "NEW"
-          : frame.step === 13 ? "ADMITTED" : frame.step === 14 ? "ALIGNING" : "MEMBER";
+          : frame.step === 11 ? "DISCOVERED"
+            : frame.step === 12 ? "ELIGIBLE"
+              : frame.step === 13 ? "ADMITTED"
+                : frame.step === 14 ? "ALIGNING" : "MEMBER";
         const badgeWidth = badgeText.length * 6.2 + 14;
         group.appendChild(svgElement("rect", {
           x: 25,
@@ -232,8 +235,10 @@
   }
 
   function currentPopulationStatus(frame) {
-    if (frame.step === 10 || frame.step === 11 || frame.step === 12) return "Active ADP · degraded";
-    if (frame.step === 13 || frame.step === 14) return "Revised Candidate ADP";
+    if (frame.step === 10) return "Active ADP · EHC updating";
+    if (frame.step === 11) return "Active ADP · new member found";
+    if (frame.step === 12) return "Active ADP · admission screening";
+    if (frame.step === 13 || frame.step === 14) return "Expanded Candidate ADP";
     if (frame.step === 15) return "Expanded Active ADP";
     if (frame.active) return "Active ADP";
     if (frame.candidate.length && frame.items.length) return "Candidate ADP · aligning";
@@ -260,7 +265,7 @@
     const feedbackSteps = [els.feedbackFast, els.feedbackSlow, els.feedbackValidation];
     let reached = -1;
     if (frame.step >= 10) reached = 0;
-    if (frame.step >= 11) reached = 1;
+    if (frame.step >= 12) reached = 1;
     if (frame.step >= 14) reached = 2;
     feedbackSteps.forEach((step, position) => {
       step.classList.toggle("reached", position <= reached);
@@ -271,19 +276,19 @@
   function renderOperations(frame) {
     if (!frame.operations.length) {
       els.operationTitle.textContent = frame.step < 10
-        ? "No structural operation is currently required"
-        : "Structural evidence is still accumulating";
+        ? "No membership change is currently required"
+        : "New-member evidence is being accumulated";
       els.operationDescription.textContent = frame.step < 10
-        ? "The operation comparison appears after repeated fast-timescale failures provide sufficient structural evidence."
-        : "A single failed slot is insufficient; the BS waits for a repeated affected-member pattern at the slow epoch boundary.";
-      els.operationGrid.innerHTML = '<div class="operation-empty">Candidate operations will be evaluated here after persistent coherence loss and residual conflict are observed.</div>';
+        ? "Admission evaluation begins when an EHC update reveals a relationship-supported agent around the active ADP."
+        : "The BS is updating the EHC and running ADP discovery before deciding whether the newly visible agent is eligible to join.";
+      els.operationGrid.innerHTML = '<div class="operation-empty">Admission alternatives appear after communication feasibility, relationship support, and expected organizational gain have been evaluated.</div>';
       return;
     }
 
     els.operationTitle.textContent = frame.step >= 13
       ? "New-member admission selected: A6 joins the ADP"
-      : "Three structural alternatives are screened";
-    els.operationDescription.textContent = "Candidate members are screened by communication feasibility and conflict relevance before the expanded population is tested for coherence and residual conflict.";
+      : "Three admission alternatives are screened";
+    els.operationDescription.textContent = "Candidate members are screened by communication feasibility, relationship support, and expected organizational gain before the expanded population is tested for reasoning coherence.";
     els.operationGrid.innerHTML = frame.operations.map(operation => `
       <article class="operation-card ${operation.status}">
         <span class="operation-status">${operation.status}</span>
@@ -326,9 +331,8 @@
     const populationStatus = currentPopulationStatus(frame);
     els.populationStatus.textContent = populationStatus;
     els.alignmentStatus.textContent = populationStatus;
-    els.populationStatus.style.color = frame.step >= 10 && frame.step <= 12
-      ? "var(--red)"
-      : frame.active ? "var(--green)" : frame.candidate.length ? "var(--amber)" : "var(--blue)";
+    els.populationStatus.style.color = frame.active
+      ? "var(--green)" : frame.candidate.length ? "var(--amber)" : "var(--blue)";
     els.coherence.textContent = frame.coherence.toFixed(2);
     els.conflicts.textContent = String(frame.conflictCount);
     els.slowEpoch.textContent = frame.slowEpoch;
