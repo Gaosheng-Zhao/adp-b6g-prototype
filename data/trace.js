@@ -351,7 +351,7 @@ window.ADP_TRACE = [
     "step": 3,
     "stage": "Coordination demand",
     "title": "Recurring pre-action conflicts emerge",
-    "description": "Repeated observations over the epoch show that two EHC-connected pairs regularly propose actions that cannot be jointly executed.",
+    "description": "Repeated observations over the epoch reveal a connected pattern of pre-actions that cannot be jointly executed across the intersection.",
     "agents": [
       {
         "id": "A1",
@@ -454,6 +454,10 @@ window.ADP_TRACE = [
         "A2"
       ],
       [
+        "A2",
+        "A3"
+      ],
+      [
         "A3",
         "A4"
       ]
@@ -462,7 +466,7 @@ window.ADP_TRACE = [
     "active": false,
     "items": [],
     "coherence": 0.0,
-    "conflictCount": 2,
+    "conflictCount": 3,
     "resources": [],
     "timescale": "slow",
     "slowEpoch": "k = 2 \u00b7 20\u201340 s",
@@ -476,7 +480,7 @@ window.ADP_TRACE = [
     "step": 4,
     "stage": "Candidate ADP",
     "title": "A candidate population is discovered",
-    "description": "After slow-timescale accumulation, recurring conflicts seed Algorithm 1 and their dependency-supported endpoints form a Candidate ADP.",
+    "description": "Algorithm 1 selects the strongest recurring-conflict seed and expands through EHC-connected agents with accumulated coordination demand.",
     "agents": [
       {
         "id": "A1",
@@ -577,6 +581,10 @@ window.ADP_TRACE = [
       [
         "A1",
         "A2"
+      ],
+      [
+        "A2",
+        "A3"
       ],
       [
         "A3",
@@ -592,7 +600,7 @@ window.ADP_TRACE = [
     "active": false,
     "items": [],
     "coherence": 0.0,
-    "conflictCount": 2,
+    "conflictCount": 3,
     "resources": [],
     "timescale": "slow",
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
@@ -605,8 +613,8 @@ window.ADP_TRACE = [
   {
     "step": 5,
     "stage": "Reasoning items",
-    "title": "Conflicts instantiate population reasoning items",
-    "description": "Within one fast decision slot, each current conflict pair contributes one unresolved item grounded in its three dependency dimensions.",
+    "title": "Cross-agent constraints instantiate population reasoning items",
+    "description": "Each item carries a task-relevant condition, decision constraint, and affected scope that may span multiple Candidate ADP members.",
     "agents": [
       {
         "id": "A1",
@@ -707,6 +715,10 @@ window.ADP_TRACE = [
       [
         "A1",
         "A2"
+      ],
+      [
+        "A2",
+        "A3"
       ],
       [
         "A3",
@@ -725,33 +737,35 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "unresolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "unresolved"
       }
     ],
     "coherence": 0.0,
-    "conflictCount": 2,
+    "conflictCount": 3,
     "resources": [],
     "timescale": "fast",
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
@@ -868,6 +882,10 @@ window.ADP_TRACE = [
         "A2"
       ],
       [
+        "A2",
+        "A3"
+      ],
+      [
         "A3",
         "A4"
       ]
@@ -884,33 +902,35 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "unresolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "unresolved"
       }
     ],
     "coherence": 0.0,
-    "conflictCount": 2,
+    "conflictCount": 3,
     "resources": [
       {
         "slot": "RB-1",
@@ -926,14 +946,14 @@ window.ADP_TRACE = [
       },
       {
         "slot": "RB-3",
-        "item": "RI-2",
+        "item": "RI-1",
         "agent": "A3",
-        "state": "waiting"
+        "state": "scheduled"
       },
       {
         "slot": "RB-4",
         "item": "RI-2",
-        "agent": "A4",
+        "agent": "A2+A3+A4",
         "state": "waiting"
       }
     ],
@@ -1064,28 +1084,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "unresolved"
       }
     ],
@@ -1095,14 +1117,14 @@ window.ADP_TRACE = [
       {
         "slot": "RB-1",
         "item": "RI-1",
-        "agent": "A1",
+        "agent": "A1+A2+A3",
         "state": "completed"
       },
       {
         "slot": "RB-2",
-        "item": "RI-1",
+        "item": "RI-2",
         "agent": "A2",
-        "state": "completed"
+        "state": "scheduled"
       },
       {
         "slot": "RB-3",
@@ -1239,28 +1261,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       }
     ],
@@ -1270,25 +1294,13 @@ window.ADP_TRACE = [
       {
         "slot": "RB-1",
         "item": "RI-1",
-        "agent": "A1",
+        "agent": "A1+A2+A3",
         "state": "completed"
       },
       {
         "slot": "RB-2",
-        "item": "RI-1",
-        "agent": "A2",
-        "state": "completed"
-      },
-      {
-        "slot": "RB-3",
         "item": "RI-2",
-        "agent": "A3",
-        "state": "completed"
-      },
-      {
-        "slot": "RB-4",
-        "item": "RI-2",
-        "agent": "A4",
+        "agent": "A2+A3+A4",
         "state": "completed"
       }
     ],
@@ -1414,28 +1426,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       }
     ],
@@ -1444,14 +1458,8 @@ window.ADP_TRACE = [
     "resources": [
       {
         "slot": "RB-1",
-        "item": "reused",
-        "agent": "A1+A2",
-        "state": "completed"
-      },
-      {
-        "slot": "RB-2",
-        "item": "reused",
-        "agent": "A3+A4",
+        "item": "z1* reused",
+        "agent": "A1+A2+A3+A4",
         "state": "completed"
       }
     ],
@@ -1589,28 +1597,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       }
     ],
@@ -1753,28 +1763,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       }
     ],
@@ -1920,28 +1932,30 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       }
     ],
@@ -2107,39 +2121,43 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       },
       {
         "id": "RI-3",
         "agents": [
+          "A2",
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
-          "spatial": 0.72,
-          "temporal": 0.78,
+          "spatial": 0.78,
+          "temporal": 0.84,
           "communication": 0.89
         },
         "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
@@ -2182,7 +2200,7 @@ window.ADP_TRACE = [
     "step": 14,
     "stage": "Expansion validation",
     "title": "Algorithm 2 aligns the expanded Candidate ADP",
-    "description": "The BS schedules A3 and A6 for RI-3 and tests whether U\u03031 can reach full reasoning coherence with no residual action conflict.",
+    "description": "The BS schedules the multi-member affected scope of RI-3 and tests whether U\u03031 can reach full reasoning coherence with no residual action conflict.",
     "agents": [
       {
         "id": "A1",
@@ -2305,39 +2323,43 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       },
       {
         "id": "RI-3",
         "agents": [
+          "A2",
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
-          "spatial": 0.72,
-          "temporal": 0.78,
+          "spatial": 0.78,
+          "temporal": 0.84,
           "communication": 0.89
         },
         "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
@@ -2350,11 +2372,23 @@ window.ADP_TRACE = [
       {
         "slot": "RB-1",
         "item": "RI-3",
-        "agent": "A3",
+        "agent": "A2",
         "state": "scheduled"
       },
       {
         "slot": "RB-2",
+        "item": "RI-3",
+        "agent": "A3",
+        "state": "scheduled"
+      },
+      {
+        "slot": "RB-3",
+        "item": "RI-3",
+        "agent": "A4",
+        "state": "scheduled"
+      },
+      {
+        "slot": "RB-4",
         "item": "RI-3",
         "agent": "A6",
         "state": "scheduled"
@@ -2511,39 +2545,43 @@ window.ADP_TRACE = [
         "id": "RI-1",
         "agents": [
           "A1",
-          "A2"
+          "A2",
+          "A3"
         ],
         "condition": {
-          "spatial": 0.86,
-          "temporal": 0.92,
-          "communication": 0.88
+          "spatial": 0.825,
+          "temporal": 0.885,
+          "communication": 0.895
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Establish a compatible traversal order across the shared intersection",
         "state": "resolved"
       },
       {
         "id": "RI-2",
         "agents": [
+          "A2",
           "A3",
           "A4"
         ],
         "condition": {
-          "spatial": 0.83,
-          "temporal": 0.9,
-          "communication": 0.86
+          "spatial": 0.81,
+          "temporal": 0.875,
+          "communication": 0.885
         },
-        "constraint": "Eliminate the corresponding pre-action conflict",
+        "constraint": "Coordinate the intersecting service and mobility actions",
         "state": "resolved"
       },
       {
         "id": "RI-3",
         "agents": [
+          "A2",
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
-          "spatial": 0.72,
-          "temporal": 0.78,
+          "spatial": 0.78,
+          "temporal": 0.84,
           "communication": 0.89
         },
         "constraint": "Align the new member with the ADP's task-relevant decision basis before activation",
@@ -2556,13 +2594,13 @@ window.ADP_TRACE = [
       {
         "slot": "RB-1",
         "item": "RI-3",
-        "agent": "A3",
+        "agent": "A2+A3",
         "state": "completed"
       },
       {
         "slot": "RB-2",
         "item": "RI-3",
-        "agent": "A6",
+        "agent": "A4+A6",
         "state": "completed"
       }
     ],
