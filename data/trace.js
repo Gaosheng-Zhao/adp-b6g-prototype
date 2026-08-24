@@ -39,13 +39,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -118,7 +111,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 1 \u00b7 0\u201320 s",
     "fastSlot": "sampling",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 1,
@@ -160,13 +154,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -239,7 +226,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 1 \u00b7 0\u201320 s",
     "fastSlot": "t = 1 \u2026 200",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 2,
@@ -281,13 +269,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -360,7 +341,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 2 \u00b7 20\u201340 s",
     "fastSlot": "aggregated slots",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 3,
@@ -402,13 +384,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -490,7 +465,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 2 \u00b7 20\u201340 s",
     "fastSlot": "t = 201 \u2026 400",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 4,
@@ -532,13 +508,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -625,7 +594,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "epoch boundary",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 5,
@@ -667,13 +637,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -789,7 +752,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 0",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 6,
@@ -831,13 +795,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -978,7 +935,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 0",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 7,
@@ -1020,13 +978,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -1163,7 +1114,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 1",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 8,
@@ -1205,13 +1157,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -1343,7 +1288,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 401 \u00b7 <100 ms",
     "reasoningRound": "r = 2",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 9,
@@ -1385,13 +1331,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -1511,7 +1450,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 402 \u00b7 <100 ms",
     "reasoningRound": "reuse",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 10,
@@ -1553,13 +1493,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -1690,7 +1623,8 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 3 \u00b7 40\u201360 s",
     "fastSlot": "t = 403 \u2026 600",
     "reasoningRound": "terminal",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 11,
@@ -1732,13 +1666,6 @@ window.ADP_TRACE = [
         "x": 105,
         "y": 105,
         "intent": "observe mobility zone"
-      },
-      {
-        "id": "A6",
-        "kind": "Backup robot",
-        "x": 615,
-        "y": 425,
-        "intent": "stand by for service replacement"
       }
     ],
     "relations": [
@@ -1850,13 +1777,14 @@ window.ADP_TRACE = [
     "slowEpoch": "k = 4 \u00b7 60\u201380 s",
     "fastSlot": "aggregate t = 403 \u2026 600",
     "reasoningRound": "\u2014",
-    "operations": []
+    "operations": [],
+    "newMembers": []
   },
   {
     "step": 12,
-    "stage": "Candidate operations",
-    "title": "The BS compares structural alternatives",
-    "description": "Retaining the population preserves the failure, while removing A4 produces attractive metrics but breaks task continuity; replacement is therefore preferred.",
+    "stage": "Member admission screening",
+    "title": "The BS searches for a conflict-relevant new member",
+    "description": "The EHC exposes newly visible agents, and the BS screens their communication feasibility and relevance to the unresolved RI-2 before expanding the ADP.",
     "agents": [
       {
         "id": "A1",
@@ -2021,30 +1949,33 @@ window.ADP_TRACE = [
         "reason": "Repeated RI-2 failure remains"
       },
       {
-        "name": "Remove A4",
-        "members": "A1, A2, A3",
-        "task": "incomplete",
-        "coherence": 1.0,
-        "conflicts": 0,
+        "name": "Admit A5",
+        "members": "A1, A2, A3, A4, A5",
+        "task": "maintained",
+        "coherence": 0.5,
+        "conflicts": 1,
         "status": "rejected",
-        "reason": "Metrics improve but the service role is lost"
+        "reason": "A5 is not dependency-relevant to unresolved RI-2"
       },
       {
-        "name": "Replace A4 with A6",
-        "members": "A1, A2, A3, A6",
+        "name": "Admit A6",
+        "members": "A1, A2, A3, A4, A6",
         "task": "maintained",
         "coherence": 1.0,
         "conflicts": 0,
         "status": "selected",
-        "reason": "Task continuity and alignment are both recoverable"
+        "reason": "A6 is communication-feasible and dependency-relevant to RI-2"
       }
+    ],
+    "newMembers": [
+      "A6"
     ]
   },
   {
     "step": 13,
-    "stage": "Operation execution",
-    "title": "Replacement creates a revised Candidate ADP",
-    "description": "A4 is replaced by the dependency-supported backup member A6. The revised membership is a Candidate ADP and cannot become active without fast-timescale validation.",
+    "stage": "Population expansion",
+    "title": "A6 joins an expanded Candidate ADP",
+    "description": "The communication-feasible and dependency-relevant A6 is admitted without removing any current member. The expanded population remains a Candidate ADP until fast-timescale validation succeeds.",
     "agents": [
       {
         "id": "A1",
@@ -2151,13 +2082,14 @@ window.ADP_TRACE = [
     "conflicts": [
       [
         "A3",
-        "A6"
+        "A4"
       ]
     ],
     "candidate": [
       "A1",
       "A2",
       "A3",
+      "A4",
       "A6"
     ],
     "active": false,
@@ -2166,6 +2098,7 @@ window.ADP_TRACE = [
         "id": "RI-3",
         "agents": [
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
@@ -2173,7 +2106,7 @@ window.ADP_TRACE = [
           "temporal": 0.78,
           "communication": 0.89
         },
-        "constraint": "Preserve the service role without residual action conflict",
+        "constraint": "Use the admitted member to eliminate the residual A3-A4 action conflict",
         "state": "unresolved"
       }
     ],
@@ -2195,30 +2128,33 @@ window.ADP_TRACE = [
         "reason": "Repeated RI-2 failure remains"
       },
       {
-        "name": "Remove A4",
-        "members": "A1, A2, A3",
-        "task": "incomplete",
-        "coherence": 1.0,
-        "conflicts": 0,
+        "name": "Admit A5",
+        "members": "A1, A2, A3, A4, A5",
+        "task": "maintained",
+        "coherence": 0.5,
+        "conflicts": 1,
         "status": "rejected",
-        "reason": "Metrics improve but the service role is lost"
+        "reason": "A5 is not dependency-relevant to unresolved RI-2"
       },
       {
-        "name": "Replace A4 with A6",
-        "members": "A1, A2, A3, A6",
+        "name": "Admit A6",
+        "members": "A1, A2, A3, A4, A6",
         "task": "maintained",
         "coherence": 1.0,
         "conflicts": 0,
         "status": "selected",
-        "reason": "Task continuity and alignment are both recoverable"
+        "reason": "A6 is communication-feasible and dependency-relevant to RI-2"
       }
+    ],
+    "newMembers": [
+      "A6"
     ]
   },
   {
     "step": 14,
-    "stage": "Candidate revalidation",
-    "title": "The revised population re-enters Algorithm 2",
-    "description": "The BS schedules the members affected by RI-3 and checks whether the replacement structure can restore coherence without residual conflict.",
+    "stage": "Expanded-ADP alignment",
+    "title": "The five-member population re-enters Algorithm 2",
+    "description": "The BS schedules A3, A4, and the admitted A6 for RI-3 and checks whether the expanded population can restore coherence without residual conflict.",
     "agents": [
       {
         "id": "A1",
@@ -2325,13 +2261,14 @@ window.ADP_TRACE = [
     "conflicts": [
       [
         "A3",
-        "A6"
+        "A4"
       ]
     ],
     "candidate": [
       "A1",
       "A2",
       "A3",
+      "A4",
       "A6"
     ],
     "active": false,
@@ -2354,6 +2291,7 @@ window.ADP_TRACE = [
         "id": "RI-3",
         "agents": [
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
@@ -2361,7 +2299,7 @@ window.ADP_TRACE = [
           "temporal": 0.78,
           "communication": 0.89
         },
-        "constraint": "Preserve the service role without residual action conflict",
+        "constraint": "Use the admitted member to eliminate the residual A3-A4 action conflict",
         "state": "unresolved"
       }
     ],
@@ -2376,6 +2314,12 @@ window.ADP_TRACE = [
       },
       {
         "slot": "RB-2",
+        "item": "RI-3",
+        "agent": "A4",
+        "state": "scheduled"
+      },
+      {
+        "slot": "RB-3",
         "item": "RI-3",
         "agent": "A6",
         "state": "scheduled"
@@ -2396,30 +2340,33 @@ window.ADP_TRACE = [
         "reason": "Repeated RI-2 failure remains"
       },
       {
-        "name": "Remove A4",
-        "members": "A1, A2, A3",
-        "task": "incomplete",
-        "coherence": 1.0,
-        "conflicts": 0,
+        "name": "Admit A5",
+        "members": "A1, A2, A3, A4, A5",
+        "task": "maintained",
+        "coherence": 0.5,
+        "conflicts": 1,
         "status": "rejected",
-        "reason": "Metrics improve but the service role is lost"
+        "reason": "A5 is not dependency-relevant to unresolved RI-2"
       },
       {
-        "name": "Replace A4 with A6",
-        "members": "A1, A2, A3, A6",
+        "name": "Admit A6",
+        "members": "A1, A2, A3, A4, A6",
         "task": "maintained",
         "coherence": 1.0,
         "conflicts": 0,
         "status": "selected",
-        "reason": "Task continuity and alignment are both recoverable"
+        "reason": "A6 is communication-feasible and dependency-relevant to RI-2"
       }
+    ],
+    "newMembers": [
+      "A6"
     ]
   },
   {
     "step": 15,
-    "stage": "Evolved Active ADP",
-    "title": "Population operation restores coherent operation",
-    "description": "The revised membership passes alignment validation: population coherence returns to one and the residual action conflict is eliminated.",
+    "stage": "Expanded Active ADP",
+    "title": "New-member admission restores coherent operation",
+    "description": "The expanded membership passes alignment validation: population coherence returns to one and the residual A3-A4 action conflict is eliminated without removing either member.",
     "agents": [
       {
         "id": "A1",
@@ -2528,6 +2475,7 @@ window.ADP_TRACE = [
       "A1",
       "A2",
       "A3",
+      "A4",
       "A6"
     ],
     "active": true,
@@ -2550,6 +2498,7 @@ window.ADP_TRACE = [
         "id": "RI-3",
         "agents": [
           "A3",
+          "A4",
           "A6"
         ],
         "condition": {
@@ -2557,7 +2506,7 @@ window.ADP_TRACE = [
           "temporal": 0.78,
           "communication": 0.89
         },
-        "constraint": "Preserve the service role without residual action conflict",
+        "constraint": "Use the admitted member to eliminate the residual A3-A4 action conflict",
         "state": "resolved"
       }
     ],
@@ -2572,6 +2521,12 @@ window.ADP_TRACE = [
       },
       {
         "slot": "RB-2",
+        "item": "RI-3",
+        "agent": "A4",
+        "state": "completed"
+      },
+      {
+        "slot": "RB-3",
         "item": "RI-3",
         "agent": "A6",
         "state": "completed"
@@ -2592,23 +2547,26 @@ window.ADP_TRACE = [
         "reason": "Repeated RI-2 failure remains"
       },
       {
-        "name": "Remove A4",
-        "members": "A1, A2, A3",
-        "task": "incomplete",
-        "coherence": 1.0,
-        "conflicts": 0,
+        "name": "Admit A5",
+        "members": "A1, A2, A3, A4, A5",
+        "task": "maintained",
+        "coherence": 0.5,
+        "conflicts": 1,
         "status": "rejected",
-        "reason": "Metrics improve but the service role is lost"
+        "reason": "A5 is not dependency-relevant to unresolved RI-2"
       },
       {
-        "name": "Replace A4 with A6",
-        "members": "A1, A2, A3, A6",
+        "name": "Admit A6",
+        "members": "A1, A2, A3, A4, A6",
         "task": "maintained",
         "coherence": 1.0,
         "conflicts": 0,
         "status": "selected",
-        "reason": "Task continuity and alignment are both recoverable"
+        "reason": "A6 is communication-feasible and dependency-relevant to RI-2"
       }
+    ],
+    "newMembers": [
+      "A6"
     ]
   }
 ];
