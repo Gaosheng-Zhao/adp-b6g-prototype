@@ -493,7 +493,8 @@ h1 {
 .item-id { font-weight: 700; }
 .item-state { color: var(--red); font-size: 0.76rem; text-transform: uppercase; }
 .reasoning-item.resolved .item-state { color: var(--green); }
-.item-agents { color: var(--muted); font-size: 0.82rem; }
+.item-agents { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 0.78rem; }
+.item-agents strong { color: var(--text); font-size: 0.8rem; font-weight: 700; }
 
 .dependency-bars {
   display: grid;
